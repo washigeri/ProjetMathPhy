@@ -23,8 +23,8 @@ public class RigidBodyScript : MonoBehaviour
 
     private Vector3 bounds = new Vector3(0, 0, 0);
 
-    private UnityEngine.Matrix4x4 inertiaMatrix;
-    private UnityEngine.Matrix4x4 inertiaMatrixInv;
+    private Matrix4x4 inertiaMatrix;
+    private Matrix4x4 inertiaMatrixInv;
 
     // Use this for initialization
     private void Awake()
@@ -40,31 +40,38 @@ public class RigidBodyScript : MonoBehaviour
         switch (shape)
         {
             case Shapes.Cube:
+                inertiaMatrix = Matrix4x4.Identity * (mass * Mathf.Pow(bounds.x, 2) / 6f);
                 break;
 
             case Shapes.Cuboid:
+                inertiaMatrix = Matrix4x4.Identity * (mass / 12f);
+                inertiaMatrix[0, 0] *= (Mathf.Pow(bounds.x, 2) + Mathf.Pow(bounds.z, 2));
+                inertiaMatrix[1, 1] *= (Mathf.Pow(bounds.y, 2) + Mathf.Pow(bounds.z, 2));
+                inertiaMatrix[2, 2] *= (Mathf.Pow(bounds.y, 2) + Mathf.Pow(bounds.x, 2));
                 break;
 
             case Shapes.Sphere:
+                inertiaMatrix = Matrix4x4.Identity * (mass * 2 * Mathf.Pow(bounds.x, 2) / 5f);
                 break;
 
             case Shapes.Cylinder:
+                inertiaMatrix = Matrix4x4.Identity * (mass * ((Mathf.Pow(bounds.z, 2) / 12f) + (Mathf.Pow(bounds.x, 2) / 4)));
+                inertiaMatrix[2, 2] = mass * (Mathf.Pow(bounds.x, 2) / 2);
                 break;
         }
-        inertiaMatrixInv = inertiaMatrix.inverse;
+        inertiaMatrixInv = inertiaMatrix.Inverse;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        Vector3 acceleration = this.ComputeAcceleration();
-        Debug.Log("Acceleration :" + acceleration.ToString());
+        Vector3 acceleration = ComputeAcceleration();
         velocity = velocity + (acceleration * Time.deltaTime);
-        gameObject.transform.position = gameObject.transform.position + (velocity * Time.deltaTime);
-        //TODO : MODIFY POSITION
+        gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
         Vector3 angularAcceleration = ComputeAngularAcceleration();
         angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
-        gameObject.transform.rotation *= Quaternion.Euler(angularSpeed * Time.deltaTime);
+        //gameObject.transform.rotation *= Quaternion.Euler(angularSpeed * Time.deltaTime);
+        UpdateForces();
     }
 
     private Vector3 ComputeAcceleration()

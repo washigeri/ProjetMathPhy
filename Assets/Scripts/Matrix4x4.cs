@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Matrix3x3
 {
-
     private float[,] v;
 
     public float this[int i, int j]
@@ -50,15 +49,8 @@ public class Matrix3x3
     }
 }
 
-public class Matrix4x4 : MonoBehaviour
+public class Matrix4x4
 {
-
-    private void Update()
-    {
-        Matrix4x4 m = RotationX(45);
-        Debug.Log(m);
-    }
-
     public override String ToString()
     {
         String res = "";
@@ -156,6 +148,18 @@ public class Matrix4x4 : MonoBehaviour
     public Matrix4x4()
     {
         v = new float[4, 4];
+    }
+
+    public Matrix4x4(Vector4 col1, Vector4 col2, Vector4 col3, Vector4 col4)
+    {
+        v = new float[4, 4];
+        for (int i = 0; i < 4; i++)
+        {
+            v[i, 0] = col1[i];
+            v[i, 1] = col2[i];
+            v[i, 2] = col3[i];
+            v[i, 3] = col4[i];
+        }
     }
 
     public static Matrix4x4 RotationX(float tetha)
@@ -400,10 +404,18 @@ public class Matrix4x4 : MonoBehaviour
 
     public static Vector3 operator *(Matrix4x4 m, Vector3 v)
     {
-        Vector3 res = Vector3.zero;
-        res.x = m[0, 0] * v.x + m[0, 1] * v.y + m[0, 2] * v.z;
-        res.y = m[1, 0] * v.x + m[1, 1] * v.y + m[1, 2] * v.z;
-        res.z = m[2, 0] * v.x + m[2, 1] * v.y + m[2, 2] * v.z;
+        Vector4 product = m * new Vector4(v.x, v.y, v.z, 1);
+        Vector3 res = new Vector3(product.x, product.y, product.z);
+        return res;
+    }
+
+    public static Vector4 operator *(Matrix4x4 m, Vector4 v)
+    {
+        Vector4 res = Vector4.zero;
+        for (int i = 0; i < 4; i++)
+        {
+            res[i] = m[i, 0] * v[0] + m[i, 1] * v[1] + m[i, 2] * v[2] + m[i, 3] * v[3];
+        }
         return res;
     }
 
@@ -432,5 +444,4 @@ public class Matrix4x4 : MonoBehaviour
         }
         return res;
     }
-
 }
