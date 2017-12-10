@@ -1,0 +1,9 @@
+Library/
+ProjetMathPhy.sln
+ProjetMathPhy.csproj
+Temp/
+.vs/
+etc/
+Assembly-CSharp.csproj
+obj/
+ProjetMathPhy.Editor.csproj
