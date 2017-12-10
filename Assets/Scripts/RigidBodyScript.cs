@@ -23,8 +23,8 @@ public class RigidBodyScript : MonoBehaviour
 
     private Vector3 bounds = new Vector3(0, 0, 0);
 
-    private Matrix4x4 inertiaMatrix;
-    private Matrix4x4 inertiaMatrixInv;
+    private UnityEngine.Matrix4x4 inertiaMatrix;
+    private UnityEngine.Matrix4x4 inertiaMatrixInv;
 
     // Use this for initialization
     private void Awake()
