@@ -70,7 +70,7 @@ public class RigidBodyScript : MonoBehaviour
         gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
         Vector3 angularAcceleration = ComputeAngularAcceleration();
         angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
-        //gameObject.transform.rotation *= Quaternion.Euler(angularSpeed * Time.deltaTime);
+        gameObject.transform.rotation *= Quaternion.Euler(angularSpeed * Time.deltaTime);
         UpdateForces();
     }
 
