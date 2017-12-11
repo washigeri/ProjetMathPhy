@@ -23,6 +23,11 @@ public class BoxCollider3D : CustomCollider
         throw new System.NotImplementedException();
     }
 
+    internal override bool IsColliding(CustomCollider collider)
+    {
+        return true;
+    }
+
     private void Update()
     {
         center = transform.position;

@@ -48,6 +48,22 @@ public class SphereCollider3D : CustomCollider
         }
     }
 
+    internal override bool IsColliding(CustomCollider collider)
+    {
+        bool res = false;
+        if (collider is SphereCollider3D)
+        {
+            var colliderSphere = (SphereCollider3D)collider;
+            res = SquareDistance(this.center, colliderSphere.center) <= Mathf.Pow(localRadius + colliderSphere.localRadius, 2);
+        }
+        else if (collider is BoxCollider3D)
+        {
+            res = true;
+            //TODO : check between sphere and box
+        }
+        return res;
+    }
+
     private void Update()
     {
         center = transform.position;

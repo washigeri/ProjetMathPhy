@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class CollisionManager : MonoBehaviour
+public class CollisionManager
 {
     private List<GameObject> colliders;
 
-    // Use this for initialization
-    private void Awake()
+    public CollisionManager(CustomCollider[] colliderRes)
     {
         colliders = new List<GameObject>();
-        CustomCollider[] collidersRes = FindObjectsOfType<CustomCollider>();
-        foreach (CustomCollider collider in collidersRes)
+        foreach (CustomCollider collider in colliderRes)
         {
             if (collider.gameObject != null && collider.gameObject.activeInHierarchy)
             {
@@ -19,14 +18,15 @@ public class CollisionManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    private void Update()
+    public void CollisionUpdate()
     {
         if (colliders.Count > 1)
         {
             SortAndSweep sortAndSweep = new SortAndSweep(colliders);
             List<SortAndSweep.GameObjectsPair> list = sortAndSweep.CheckForPossibleCollisions();
-            Debug.Log("Collisions: " + list.Count);
+            Debug.Log("Sort and sweep result length : " + list.Count);
+            list = list.Where(o => o.AreColliding()).ToList();
+            Debug.Log("Filter length : " + list.Count);
         }
     }
 }

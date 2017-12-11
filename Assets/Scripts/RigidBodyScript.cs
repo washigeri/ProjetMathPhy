@@ -40,7 +40,7 @@ public class RigidBodyScript : MonoBehaviour
         velocity = new Vector3(0f, 0f, 0f);
         angularSpeed = new Vector3(0f, 0f, 0f);
         if (useGravity)
-            AddForce(PhysicsManger.gravityMultiplied * mass, persistent: true);
+            AddForce(PhysicsManager.gravityMultiplied * mass, persistent: true);
         switch (shape)
         {
             case Shapes.Cube:
@@ -67,7 +67,7 @@ public class RigidBodyScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    public void NewtonUpdate()
     {
         Vector3 acceleration = ComputeAcceleration();
         velocity = velocity + (acceleration * Time.deltaTime);
