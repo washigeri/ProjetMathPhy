@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class SphereCollider3D : Collider {
-
+public class SphereCollider3D : CustomCollider
+{
     public Vector3 center = Vector3.zero;
 
     public float localRadius = 0.5f;
 
     private float radius;
 
-    protected override float GetMinXYZ(int axe)
+    internal override float GetMinXYZ(int axe)
     {
         if (axe == 0)
         {
@@ -30,7 +28,7 @@ public class SphereCollider3D : Collider {
         }
     }
 
-    protected override float GetMaxXYZ(int axe)
+    internal override float GetMaxXYZ(int axe)
     {
         if (axe == 0)
         {
@@ -55,5 +53,4 @@ public class SphereCollider3D : Collider {
         center = transform.position;
         radius = localRadius * Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
-
 }

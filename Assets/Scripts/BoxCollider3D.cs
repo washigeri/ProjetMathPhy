@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BoxCollider3D : Collider {
-
+public class BoxCollider3D : CustomCollider
+{
     public Vector3 center = Vector3.zero;
     public Vector3 localSize = Vector3.one;
 
     private Vector3 size;
 
     //A faire
-    protected override float GetMaxXYZ(int axe)
+    internal override float GetMaxXYZ(int axe)
     {
         if (axe == 0)
         {
@@ -20,7 +18,7 @@ public class BoxCollider3D : Collider {
     }
 
     //A faire
-    protected override float GetMinXYZ(int axe)
+    internal override float GetMinXYZ(int axe)
     {
         throw new System.NotImplementedException();
     }
@@ -30,5 +28,4 @@ public class BoxCollider3D : Collider {
         center = transform.position;
         size = new Vector3(localSize.x * transform.localScale.x, localSize.y * transform.localScale.y, localSize.z * transform.localScale.z);
     }
-
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class CollisionManager : MonoBehaviour
@@ -9,8 +8,9 @@ public class CollisionManager : MonoBehaviour
     // Use this for initialization
     private void Awake()
     {
-        Collider[] collidersRes = FindObjectsOfType<Collider>();
-        foreach (Collider collider in collidersRes)
+        colliders = new List<GameObject>();
+        CustomCollider[] collidersRes = FindObjectsOfType<CustomCollider>();
+        foreach (CustomCollider collider in collidersRes)
         {
             if (collider.gameObject != null && collider.gameObject.activeInHierarchy)
             {
@@ -22,5 +22,11 @@ public class CollisionManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (colliders.Count > 1)
+        {
+            SortAndSweep sortAndSweep = new SortAndSweep(colliders);
+            List<SortAndSweep.GameObjectsPair> list = sortAndSweep.CheckForPossibleCollisions();
+            Debug.Log("Collisions: " + list.Count);
+        }
     }
 }
