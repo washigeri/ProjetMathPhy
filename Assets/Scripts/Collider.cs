@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Collider : MonoBehaviour {
+public abstract class Collider : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    protected bool Enabled { get; set; }
+
+    protected abstract float GetMinXYZ(int axe);
+
+    protected abstract float GetMaxXYZ(int axe);
 }
