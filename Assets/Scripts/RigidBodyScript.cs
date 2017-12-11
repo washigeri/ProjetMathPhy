@@ -21,7 +21,14 @@ public class RigidBodyScript : MonoBehaviour
     private Vector3 velocity;
     private Vector3 angularSpeed;
 
-    private Vector3 bounds = new Vector3(0, 0, 0);
+    public float radius = 1;
+    public float square_size = 1;
+
+    public float cuboid_size_x = 1;
+    public float cuboid_size_y = 1;
+    public float cuboid_size_z = 1;
+
+    public float cylinder_height = 1;
 
     private Matrix4x4 inertiaMatrix;
     private Matrix4x4 inertiaMatrixInv;
@@ -29,9 +36,6 @@ public class RigidBodyScript : MonoBehaviour
     // Use this for initialization
     private void Awake()
     {
-        Renderer render = gameObject.GetComponent<Renderer>();
-        if (render != null && render.bounds.size != new Vector3(0, 0, 0))
-            bounds = render.bounds.size;
         forces = new List<Force>();
         velocity = new Vector3(0f, 0f, 0f);
         angularSpeed = new Vector3(0f, 0f, 0f);
@@ -40,23 +44,23 @@ public class RigidBodyScript : MonoBehaviour
         switch (shape)
         {
             case Shapes.Cube:
-                inertiaMatrix = Matrix4x4.Identity * (mass * Mathf.Pow(bounds.x, 2) / 6f);
+                inertiaMatrix = Matrix4x4.Identity * (mass * Mathf.Pow(square_size, 2) / 6f);
                 break;
 
             case Shapes.Cuboid:
                 inertiaMatrix = Matrix4x4.Identity * (mass / 12f);
-                inertiaMatrix[0, 0] *= (Mathf.Pow(bounds.x, 2) + Mathf.Pow(bounds.z, 2));
-                inertiaMatrix[1, 1] *= (Mathf.Pow(bounds.y, 2) + Mathf.Pow(bounds.z, 2));
-                inertiaMatrix[2, 2] *= (Mathf.Pow(bounds.y, 2) + Mathf.Pow(bounds.x, 2));
+                inertiaMatrix[0, 0] *= (Mathf.Pow(cuboid_size_x, 2) + Mathf.Pow(cuboid_size_z, 2));
+                inertiaMatrix[1, 1] *= (Mathf.Pow(cuboid_size_y, 2) + Mathf.Pow(cuboid_size_z, 2));
+                inertiaMatrix[2, 2] *= (Mathf.Pow(cuboid_size_y, 2) + Mathf.Pow(cuboid_size_x, 2));
                 break;
 
             case Shapes.Sphere:
-                inertiaMatrix = Matrix4x4.Identity * (mass * 2 * Mathf.Pow(bounds.x, 2) / 5f);
+                inertiaMatrix = Matrix4x4.Identity * (mass * 2 * Mathf.Pow(radius, 2) / 5f);
                 break;
 
             case Shapes.Cylinder:
-                inertiaMatrix = Matrix4x4.Identity * (mass * ((Mathf.Pow(bounds.z, 2) / 12f) + (Mathf.Pow(bounds.x, 2) / 4)));
-                inertiaMatrix[2, 2] = mass * (Mathf.Pow(bounds.x, 2) / 2);
+                inertiaMatrix = Matrix4x4.Identity * (mass * ((Mathf.Pow(cylinder_height, 2) / 12f) + (Mathf.Pow(radius, 2) / 4)));
+                inertiaMatrix[2, 2] = mass * (Mathf.Pow(radius, 2) / 2);
                 break;
         }
         inertiaMatrixInv = inertiaMatrix.Inverse;
@@ -70,7 +74,7 @@ public class RigidBodyScript : MonoBehaviour
         gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
         Vector3 angularAcceleration = ComputeAngularAcceleration();
         angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
-        gameObject.transform.rotation *= Quaternion.Euler(angularSpeed * Time.deltaTime);
+        gameObject.transform.Rotate(angularSpeed * Time.deltaTime);
         UpdateForces();
     }
 
