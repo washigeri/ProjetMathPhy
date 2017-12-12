@@ -4,33 +4,21 @@ public class SphereCollider3D : CustomCollider
 {
     public Vector3 center = Vector3.zero;
 
-    public float Radius
-    {
-        set
-        {
-            radius = value;
-        }
-        get
-        {
-            return radius;
-        }
-    }
-
-    public float radius;
+    public float radius = 0.5f;
 
     internal override float GetMinXYZ(int axe)
     {
         if (axe == 0)
         {
-            return center.x - Radius;
+            return center.x - radius;
         }
         else if (axe == 1)
         {
-            return center.y - Radius;
+            return center.y - radius;
         }
         else if (axe == 2)
         {
-            return center.z - Radius;
+            return center.z - radius;
         }
         else
         {
@@ -42,15 +30,15 @@ public class SphereCollider3D : CustomCollider
     {
         if (axe == 0)
         {
-            return center.x + Radius;
+            return center.x + radius;
         }
         else if (axe == 1)
         {
-            return center.y + Radius;
+            return center.y + radius;
         }
         else if (axe == 2)
         {
-            return center.z + Radius;
+            return center.z + radius;
         }
         else
         {
@@ -58,40 +46,46 @@ public class SphereCollider3D : CustomCollider
         }
     }
 
-    internal override bool IsColliding(CustomCollider collider)
+    internal override CollisionInfo IsColliding(CustomCollider collider)
     {
-        bool res = false;
+        bool isColliding = false;
         if (collider is SphereCollider3D)
         {
             var colliderSphere = (SphereCollider3D)collider;
-            res = SquareDistance(this.center, colliderSphere.center) <= Mathf.Pow(Radius + colliderSphere.Radius, 2);
+            isColliding = SquareDistance(this.center, colliderSphere.center) <= Mathf.Pow(radius + colliderSphere.radius, 2);
+            if (isColliding)
+            {
+                return new CollisionInfo((this.center * this.radius - colliderSphere.center * colliderSphere.radius) / (this.radius + colliderSphere.radius), (this.center - colliderSphere.center).normalized);
+            }
         }
         else if (collider is BoxCollider3D)
         {
             var colliderBox = (BoxCollider3D)collider;
             Vector3 closestPoint = ClosestPoint(colliderBox.center);
-            if(Vector3.Distance(Vector3.zero, Vector3.zero) < 0f)
+            bool overlapX = (closestPoint.x > colliderBox.center.x - colliderBox.size.x / 2f) && (closestPoint.x < colliderBox.center.x + colliderBox.size.x / 2f);
+            bool overlapY = (closestPoint.y > colliderBox.center.y - colliderBox.size.y / 2f) && (closestPoint.y < colliderBox.center.y + colliderBox.size.y / 2f);
+            bool overlapZ = (closestPoint.z > colliderBox.center.z - colliderBox.size.z / 2f) && (closestPoint.z < colliderBox.center.z + colliderBox.size.z / 2f);
+            
+            isColliding = overlapX && overlapY && overlapZ;
+            if (isColliding)
             {
-                return false;
+                return new CollisionInfo(closestPoint, (colliderBox.center - center).normalized);
             }
-
-            res = true;
-            //TODO : check between sphere and box
         }
-        return res;
+        return null;
     }
 
     private void Update()
     {
         center = transform.position;
         radius = Mathf.Max(Bounds.extents.x * transform.lossyScale.x, Bounds.extents.y * transform.lossyScale.y, Bounds.extents.z * transform.lossyScale.z);
-        Debug.Log("radius = " + Radius);
+        Debug.Log("radius = " + radius);
     }
 
     internal override Vector3 ClosestPoint(Vector3 point)
     {
         Vector3 direction = (point - center).normalized;
-        return center + Radius * direction;
+        return center + radius * direction;
     }
 
     private void OnDrawGizmosSelected()

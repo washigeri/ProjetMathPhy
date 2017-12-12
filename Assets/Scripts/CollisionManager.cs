@@ -25,7 +25,7 @@ public class CollisionManager
             SortAndSweep sortAndSweep = new SortAndSweep(colliders);
             List<SortAndSweep.GameObjectsPair> list = sortAndSweep.CheckForPossibleCollisions();
             Debug.Log("Sort and sweep result length : " + list.Count);
-            list = list.Where(o => o.AreColliding()).ToList();
+            //list = list.Where(o => o.AreColliding()).ToList();
             Debug.Log("Filter length : " + list.Count);
         }
     }

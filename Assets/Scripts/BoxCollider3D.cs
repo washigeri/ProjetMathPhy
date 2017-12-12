@@ -3,8 +3,15 @@
 public class BoxCollider3D : CustomCollider
 {
     public Vector3 center = Vector3.zero;
-    public Vector3 localSize = Vector3.one;
-    private Vector3 size;
+
+    public Vector3 size = Vector3.zero;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        center = Bounds.center;
+        size = Bounds.size;
+    }
 
     internal override Vector3 ClosestPoint(Vector3 point)
     {
@@ -51,16 +58,16 @@ public class BoxCollider3D : CustomCollider
         }
     }
 
-    internal override bool IsColliding(CustomCollider collider)
+    internal override CollisionInfo IsColliding(CustomCollider collider)
     {
-        return true;
+        return null;
     }
+
+
 
     private void Update()
     {
         center = transform.position;
-
-        size = new Vector3(localSize.x * transform.lossyScale.x, localSize.y * transform.lossyScale.y, localSize.z * transform.lossyScale.z);
     }
 
     private void OnDrawGizmosSelected()

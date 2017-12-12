@@ -1,6 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+public class CollisionInfo
+{
+    private Vector3 collisionPoint;
+    private Vector3 normalVector;
+
+    public CollisionInfo(Vector3 pt, Vector3 normal)
+    {
+        collisionPoint = pt;
+        normalVector = normal;
+    }
+}
+
 public abstract class CustomCollider : MonoBehaviour
 {
     protected bool Enabled { get; set; }
@@ -19,17 +31,17 @@ public abstract class CustomCollider : MonoBehaviour
 
     internal abstract float GetMaxXYZ(int axe);
 
-    internal abstract bool IsColliding(CustomCollider collider);
+    internal abstract CollisionInfo IsColliding(CustomCollider collider);
 
     internal abstract Vector3 ClosestPoint(Vector3 point);
 
     internal static float SquareDistance(Vector3 point1, Vector3 point2)
     {
-        float res = Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2) + Mathf.Pow(point2.z + point1.z, 2);
+        float res = Mathf.Pow(point2.x - point1.x, 2) + Mathf.Pow(point2.y - point1.y, 2) + Mathf.Pow(point2.z - point1.z, 2);
         return res;
     }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         Vector3 currentRotation = transform.eulerAngles;
         transform.eulerAngles = Vector3.zero;
@@ -41,21 +53,5 @@ public abstract class CustomCollider : MonoBehaviour
         bounds.min = copy.min;
         transform.eulerAngles = currentRotation;
     }
-    internal static Vector3 ComputeCollisionPoint(CustomCollider collider1, CustomCollider collider2)
-    {
-        if (collider1 is SphereCollider3D)
-        {
-            var collider1sphere = (SphereCollider3D)collider1;
-            if (collider2 is SphereCollider3D)
-            {
-                var collider2sphere = (SphereCollider3D)collider2;
-                return (collider1sphere.center - collider2sphere.center) / 2f;
-            }
-            else if (collider2 is BoxCollider3D)
-            {
-                var collider2Box = (BoxCollider3D)collider2;
-                return (collider1sphere.center * collider1sphere.radius + collider2Box.center * collider2Box.radius) / (collider1sphere.radius + collider2Box.radius);
-            }
-        }
-    }
+    
 }
