@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class CollisionInfo
 {
-    private Vector3 collisionPoint;
-    private Vector3 normalVector;
+    public Vector3 collisionPoint;
+    public Vector3 normalVector;
 
     public CollisionInfo(Vector3 pt, Vector3 normal)
     {
@@ -13,6 +13,7 @@ public class CollisionInfo
     }
 }
 
+[RequireComponent(typeof(RigidBodyScript))]
 public abstract class CustomCollider : MonoBehaviour
 {
     protected bool Enabled { get; set; }
@@ -53,5 +54,4 @@ public abstract class CustomCollider : MonoBehaviour
         bounds.min = copy.min;
         transform.eulerAngles = currentRotation;
     }
-    
 }

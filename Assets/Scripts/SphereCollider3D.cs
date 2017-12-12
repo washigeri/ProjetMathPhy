@@ -65,7 +65,7 @@ public class SphereCollider3D : CustomCollider
             bool overlapX = (closestPoint.x > colliderBox.center.x - colliderBox.size.x / 2f) && (closestPoint.x < colliderBox.center.x + colliderBox.size.x / 2f);
             bool overlapY = (closestPoint.y > colliderBox.center.y - colliderBox.size.y / 2f) && (closestPoint.y < colliderBox.center.y + colliderBox.size.y / 2f);
             bool overlapZ = (closestPoint.z > colliderBox.center.z - colliderBox.size.z / 2f) && (closestPoint.z < colliderBox.center.z + colliderBox.size.z / 2f);
-            
+
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
