@@ -80,8 +80,6 @@ public class SphereCollider3D : CustomCollider
         base.Update();
         center = transform.position;
         radius = Mathf.Max(bounds.extents.x * transform.lossyScale.x, bounds.extents.y * transform.lossyScale.y, bounds.extents.z * transform.lossyScale.z);
-        Debug.Log("radius = " + radius);
-        Debug.Log("center = " + center);
     }
 
     internal override Vector3 ClosestPoint(Vector3 point)
