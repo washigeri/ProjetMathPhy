@@ -18,12 +18,12 @@ public class SortAndSweep
         internal GameObject gameObject1;
         internal GameObject gameObject2;
 
-        //internal bool AreColliding()
-        //{
-        //    CustomCollider collider1 = gameObject1.GetComponent<CustomCollider>();
-        //    CustomCollider collider2 = gameObject2.GetComponent<CustomCollider>();
-        //    return collider1.IsColliding(collider2);
-        //}
+        internal CollisionInfo AreColliding()
+        {
+            CustomCollider collider1 = gameObject1.GetComponent<CustomCollider>();
+            CustomCollider collider2 = gameObject2.GetComponent<CustomCollider>();
+            return collider1.IsColliding(collider2);
+        }
     }
 
     internal struct SearchNode
