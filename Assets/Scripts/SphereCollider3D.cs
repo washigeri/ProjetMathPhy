@@ -93,4 +93,10 @@ public class SphereCollider3D : CustomCollider
         Vector3 direction = (point - center).normalized;
         return center + Radius * direction;
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(0, 1, 0);
+        Gizmos.DrawWireSphere(center, radius);
+    }
 }
