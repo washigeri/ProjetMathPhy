@@ -14,9 +14,9 @@ public class RigidBodyScript : MonoBehaviour
 {
     public float mass = 1f;
     public bool useGravity = true;
-    public bool isMoving = true;
     public Shapes shape;
     public float drag;
+    public float restitution = 0.5f;
 
     [HideInInspector]
     public List<Force> forces;
@@ -26,6 +26,8 @@ public class RigidBodyScript : MonoBehaviour
 
     [HideInInspector]
     public Vector3 angularSpeed;
+
+    public float invMass;
 
     public float radius = 1;
     public float square_size = 1;
@@ -48,6 +50,10 @@ public class RigidBodyScript : MonoBehaviour
     // Use this for initialization
     private void Awake()
     {
+        if (mass == 0)
+            invMass = 0;
+        else
+            invMass = 1f / mass;
         forces = new List<Force>();
         velocity = new Vector3(0f, 0f, 0f);
         angularSpeed = new Vector3(0f, 0f, 0f);
@@ -88,15 +94,14 @@ public class RigidBodyScript : MonoBehaviour
         AddForce(airDrag);
         if (useGravity)
             AddForce(PhysicsManager.gravityMultiplied * mass);
-        if (isMoving)
-        {
-            Vector3 acceleration = ComputeAcceleration();
-            velocity = velocity + (acceleration * Time.deltaTime);
-            gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
-            Vector3 angularAcceleration = ComputeAngularAcceleration();
-            angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
-            gameObject.transform.Rotate(angularSpeed * Time.deltaTime);
-        }
+
+        Vector3 acceleration = ComputeAcceleration();
+        velocity = velocity + (acceleration * Time.deltaTime);
+        gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
+        Vector3 angularAcceleration = ComputeAngularAcceleration();
+        angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
+        gameObject.transform.Rotate(angularSpeed * Time.deltaTime);
+
         UpdateForces();
     }
 
@@ -107,7 +112,7 @@ public class RigidBodyScript : MonoBehaviour
         {
             acceleration += force.forceVector;
         }
-        acceleration /= mass;
+        acceleration *= invMass;
         return acceleration;
     }
 
@@ -139,7 +144,6 @@ public class RigidBodyScript : MonoBehaviour
         Force forceF = new Force(force.x, force.y, force.z, position.x, position.y, position.z);
 
         forces.Add(forceF);
-        Debug.Log("Added force : " + forceF.forceVector);
     }
 
     public void AddForce(Vector3 force, Vector3 point)

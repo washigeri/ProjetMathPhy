@@ -5,16 +5,17 @@ public class CollisionInfo
 {
     public Vector3 collisionPoint;
     public Vector3 normalVector;
+    public float penetrationDepth;
 
-    public CollisionInfo(Vector3 pt, Vector3 normal)
+    public CollisionInfo(Vector3 pt, Vector3 normal, float penetrationDepth)
     {
         collisionPoint = pt;
         normalVector = normal;
+        this.penetrationDepth = penetrationDepth;
     }
 }
 
 [RequireComponent(typeof(RigidBodyScript))]
-
 public abstract class CustomCollider : MonoBehaviour
 {
     private Vector3 oldPosition;
@@ -56,8 +57,8 @@ public abstract class CustomCollider : MonoBehaviour
     protected virtual void Update()
     {
         UpdateBounds();
-        Debug.Log("bounds.min = " + bounds.min);
-        Debug.Log("bounds.max = " + bounds.max);
+        //Debug.Log("bounds.min = " + bounds.min);
+        //Debug.Log("bounds.max = " + bounds.max);
         oldPosition = transform.position;
         oldRotation = transform.eulerAngles;
     }

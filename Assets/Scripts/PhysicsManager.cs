@@ -7,7 +7,6 @@ public class PhysicsManager : MonoBehaviour
 {
     public static Vector3 gravity = new Vector3(0, -9.81f, 0);
     public static float gravityMultiplier = 1f;
-    public static float elasticity = 0.5f;
     public static float airDensity = 1.2f;
     public static float frictionCoeff = 0.5f;
 

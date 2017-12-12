@@ -116,14 +116,21 @@ public class Matrix4x4
         {
             Matrix4x4 res = new Matrix4x4();
             float det = Determinant;
-            for (int i = 0; i < 4; i++)
+            if (det != 0)
             {
-                for (int j = 0; j < 4; j++)
+                for (int i = 0; i < 4; i++)
                 {
-                    res[j, i] = new Matrix3x3(this, i, j).Determinant * Mathf.Pow(-1, i + j) / det;
+                    for (int j = 0; j < 4; j++)
+                    {
+                        res[j, i] = new Matrix3x3(this, i, j).Determinant * Mathf.Pow(-1, i + j) / det;
+                    }
                 }
+                return res;
             }
-            return res;
+            else
+            {
+                return Zero;
+            }
         }
     }
 
