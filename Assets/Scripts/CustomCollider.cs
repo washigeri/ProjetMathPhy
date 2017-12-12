@@ -45,13 +45,19 @@ public abstract class CustomCollider : MonoBehaviour
     {
         Vector3 translation = transform.position - oldPosition;
         Vector3 rotation = transform.eulerAngles - oldRotation;
-        Matrix4x4 ZYXT = Matrix4x4.RotationXYZ(rotation.x, rotation.y, rotation.z, translation);
-        bounds.center = ZYXT * bounds.center;
+        Matrix4x4 ZYX = Matrix4x4.RotationXYZ(rotation.x, rotation.y, rotation.z);
+        Matrix4x4 T = Matrix4x4.Translation(translation);
+        bounds.center = ZYX * T * bounds.center;
+        //bounds.min = ZYXT * bounds.min;
+        //bounds.min = ZYXT * bounds.max;
+        //bounds.center = T * bounds.center;
     }
 
     protected virtual void Update()
     {
         UpdateBounds();
+        Debug.Log("bounds.min = " + bounds.min);
+        Debug.Log("bounds.max = " + bounds.max);
         oldPosition = transform.position;
         oldRotation = transform.eulerAngles;
     }

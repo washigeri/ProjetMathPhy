@@ -78,9 +78,9 @@ public class BoxCollider3D : CustomCollider
         {
             var colliderBox = (BoxCollider3D)collider;
             bool overlapX, overlapY, overlapZ;
-            overlapX = !((center.x + size.x / 2f < colliderBox.center.x - colliderBox.size.x / 2f) || (colliderBox.center.x + colliderBox.size.x / 2f < center.x - size.x / 2f));
-            overlapY = !((center.y + size.y / 2f < colliderBox.center.y - colliderBox.size.y / 2f) || (colliderBox.center.y + colliderBox.size.y / 2f < center.y - size.y / 2f));
-            overlapZ = !((center.z + size.z / 2f < colliderBox.center.z - colliderBox.size.z / 2f) || (colliderBox.center.z + colliderBox.size.z / 2f < center.z - size.z / 2f));
+            overlapX = (center.x - size.x / 2f <= colliderBox.center.x - colliderBox.size.x / 2f && colliderBox.center.x - colliderBox.size.x / 2f <= center.x + size.x / 2f);
+            overlapY = (center.y - size.y / 2f <= colliderBox.center.y - colliderBox.size.y / 2f && colliderBox.center.y - colliderBox.size.y / 2f <= center.y + size.y / 2f);
+            overlapZ = (center.z - size.z / 2f <= colliderBox.center.z - colliderBox.size.z / 2f && colliderBox.center.z - colliderBox.size.z / 2f <= center.z + size.z / 2f);
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
