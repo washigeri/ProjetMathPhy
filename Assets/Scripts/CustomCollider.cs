@@ -23,8 +23,6 @@ public abstract class CustomCollider : MonoBehaviour
 
     protected bool Enabled { get; set; }
 
-    protected Bounds bounds;
-
     protected RigidBodyScript rb;
 
     internal abstract float GetMinXYZ(int axe);
@@ -41,40 +39,8 @@ public abstract class CustomCollider : MonoBehaviour
         return res;
     }
 
-    private void UpdateBounds()
-    {
-        Vector3 translation = transform.position - oldPosition;
-        Vector3 rotation = transform.eulerAngles - oldRotation;
-        Matrix4x4 ZYX = Matrix4x4.RotationXYZ(rotation.x, rotation.y, rotation.z);
-        Matrix4x4 T = Matrix4x4.Translation(translation);
-        bounds.center = ZYX * T * bounds.center;
-        //bounds.min = ZYXT * bounds.min;
-        //bounds.min = ZYXT * bounds.max;
-        //bounds.center = T * bounds.center;
-    }
-
-    protected virtual void Update()
-    {
-        UpdateBounds();
-        Debug.Log("bounds.min = " + bounds.min);
-        Debug.Log("bounds.max = " + bounds.max);
-        oldPosition = transform.position;
-        oldRotation = transform.eulerAngles;
-    }
-
     protected virtual void Awake()
     {
-        Vector3 currentRotation = transform.eulerAngles;
-        transform.eulerAngles = Vector3.zero;
-        Bounds copy = gameObject.GetComponent<Renderer>().bounds;
-        bounds.center = copy.center;
-        bounds.size = copy.size;
-        bounds.extents = copy.extents;
-        bounds.max = copy.max;
-        bounds.min = copy.min;
-        transform.eulerAngles = currentRotation;
         rb = GetComponent<RigidBodyScript>();
-        oldPosition = transform.position;
-        oldRotation = transform.eulerAngles;
     }
 }
