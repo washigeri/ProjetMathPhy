@@ -6,7 +6,7 @@ public class SphereCollider3D : CustomCollider
 
     public float localRadius = 0.5f;
 
-    private float radius;
+    public float radius;
 
     internal override float GetMinXYZ(int axe)
     {
@@ -68,5 +68,11 @@ public class SphereCollider3D : CustomCollider
     {
         center = transform.position;
         radius = localRadius * Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(0, 1, 0);
+        Gizmos.DrawWireSphere(center, radius);
     }
 }

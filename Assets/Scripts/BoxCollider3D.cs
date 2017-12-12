@@ -33,4 +33,10 @@ public class BoxCollider3D : CustomCollider
         center = transform.position;
         size = new Vector3(localSize.x * transform.localScale.x, localSize.y * transform.localScale.y, localSize.z * transform.localScale.z);
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(0, 1, 0);
+        Gizmos.DrawWireCube(center, size);
+    }
 }

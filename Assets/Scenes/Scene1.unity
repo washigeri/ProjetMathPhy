@@ -343,11 +343,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 663616022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81551a8db630cc7419d0831d74a0baa6, type: 3}
+  m_Script: {fileID: 11500000, guid: c42977565e15674418e4f71741490f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   center: {x: 0, y: 0, z: 0}
-  localRadius: 0.5
+  localSize: {x: 1, y: 1, z: 1}
 --- !u!33 &663616026
 MeshFilter:
   m_ObjectHideFlags: 0
