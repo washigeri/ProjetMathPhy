@@ -64,6 +64,9 @@ public class CollisionManager
                     pair.gameObject1.GetComponent<RigidBodyScript>().angularSpeed += pair.gameObject1.GetComponent<RigidBodyScript>().inertiaMatrixInv * Vector3.Cross(r1, kr * collision.normalVector) * Mathf.Rad2Deg;
                     pair.gameObject2.GetComponent<RigidBodyScript>().angularSpeed -= pair.gameObject2.GetComponent<RigidBodyScript>().inertiaMatrixInv * Vector3.Cross(r2, kr * collision.normalVector) * Mathf.Rad2Deg;
 
+                    pair.gameObject1.GetComponent<RigidBodyScript>().AddForce(PhysicsManager.frictionCoeff * u1);
+                    pair.gameObject2.GetComponent<RigidBodyScript>().AddForce(PhysicsManager.frictionCoeff * u2);
+
                     if (!pair.gameObject1.GetComponent<RigidBodyScript>().isMoving)
                     {
                         pair.gameObject2.GetComponent<RigidBodyScript>().velocity = Vector3.zero;
