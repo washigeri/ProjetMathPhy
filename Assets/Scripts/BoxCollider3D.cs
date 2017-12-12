@@ -6,11 +6,19 @@ public class BoxCollider3D : CustomCollider
 
     public Vector3 size = Vector3.zero;
 
+    public Vector3 Size
+    {
+        get
+        {
+            return new Vector3(size.x * transform.localScale.x, size.y * transform.localScale.y, size.z * transform.localScale.z);
+        }
+    }
+
     protected override void Awake()
     {
         base.Awake();
-        center = Bounds.center;
-        size = Bounds.size;
+        center = bounds.center;
+        size = bounds.size;
     }
 
     internal override Vector3 ClosestPoint(Vector3 point)
@@ -22,15 +30,15 @@ public class BoxCollider3D : CustomCollider
     {
         if (axe == 0)
         {
-            return Bounds.max.x;
+            return bounds.max.x;
         }
         else if (axe == 1)
         {
-            return Bounds.max.y;
+            return bounds.max.y;
         }
         else if (axe == 2)
         {
-            return Bounds.max.z;
+            return bounds.max.z;
         }
         else
         {
@@ -42,15 +50,15 @@ public class BoxCollider3D : CustomCollider
     {
         if (axe == 0)
         {
-            return Bounds.min.x;
+            return bounds.min.x;
         }
         else if (axe == 1)
         {
-            return Bounds.min.y;
+            return bounds.min.y;
         }
         else if (axe == 2)
         {
-            return Bounds.min.z;
+            return bounds.min.z;
         }
         else
         {
@@ -60,14 +68,36 @@ public class BoxCollider3D : CustomCollider
 
     internal override CollisionInfo IsColliding(CustomCollider collider)
     {
+        bool isColliding = false;
+        if (collider is SphereCollider3D)
+        {
+            var colliderSphere = (SphereCollider3D)collider;
+            return colliderSphere.IsColliding(this);
+        }
+        else if (collider is BoxCollider3D)
+        {
+            var colliderBox = (BoxCollider3D)collider;
+            isColliding = (center.x + size.x / 2f < colliderBox.center.x - colliderBox.size.x / 2f) || (colliderBox.center.x + colliderBox.size.x / 2f < center.x - size.x / 2f);
+            if(!isColliding)
+            {
+                isColliding |= (center.y + size.y / 2f < colliderBox.center.y - colliderBox.size.y / 2f) || (colliderBox.center.y + colliderBox.size.y / 2f < center.y - size.y / 2f);
+                if (!isColliding)
+                {
+                    isColliding |= (center.z + size.z / 2f < colliderBox.center.z - colliderBox.size.z / 2f) || (colliderBox.center.z + colliderBox.size.z / 2f < center.z - size.z / 2f);
+                }
+            }
+            if (isColliding)
+            {
+                return new CollisionInfo((center - colliderBox.center) / 2f, (center - colliderBox.center).normalized);
+            }
+        }
         return null;
     }
-
-
-
-    private void Update()
+    
+    protected override void Update()
     {
-        center = transform.position;
+        base.Update();
+        center = bounds.center;
     }
 
     private void OnDrawGizmosSelected()

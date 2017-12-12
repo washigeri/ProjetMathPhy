@@ -13,19 +13,19 @@ public class CollisionInfo
     }
 }
 
+[RequireComponent(typeof(RigidBodyScript))]
+
 public abstract class CustomCollider : MonoBehaviour
 {
+    private Vector3 oldPosition;
+
+    private Vector3 oldRotation;
+
     protected bool Enabled { get; set; }
 
-    protected Bounds Bounds
-    {
-        get
-        {
-            return bounds;
-        }
-    }
+    protected Bounds bounds;
 
-    private Bounds bounds;
+    protected RigidBodyScript rb;
 
     internal abstract float GetMinXYZ(int axe);
 
@@ -41,6 +41,21 @@ public abstract class CustomCollider : MonoBehaviour
         return res;
     }
 
+    private void UpdateBounds()
+    {
+        Vector3 translation = transform.position - oldPosition;
+        Vector3 rotation = transform.eulerAngles - oldRotation;
+        Matrix4x4 ZYXT = Matrix4x4.RotationXYZ(rotation.x, rotation.y, rotation.z, translation);
+        bounds.center = ZYXT * bounds.center;
+    }
+
+    protected virtual void Update()
+    {
+        UpdateBounds();
+        oldPosition = transform.position;
+        oldRotation = transform.eulerAngles;
+    }
+
     protected virtual void Awake()
     {
         Vector3 currentRotation = transform.eulerAngles;
@@ -52,6 +67,9 @@ public abstract class CustomCollider : MonoBehaviour
         bounds.max = copy.max;
         bounds.min = copy.min;
         transform.eulerAngles = currentRotation;
+        rb = GetComponent<RigidBodyScript>();
+        oldPosition = transform.position;
+        oldRotation = transform.eulerAngles;
     }
     
 }

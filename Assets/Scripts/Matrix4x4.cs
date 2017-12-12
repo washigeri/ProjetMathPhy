@@ -292,6 +292,23 @@ public class Matrix4x4
         return res;
     }
 
+    public static Matrix4x4 RotationXYZ(float thetaX, float thetaY, float thetaZ)
+    {
+        Matrix4x4 X = RotationX(thetaX);
+        Matrix4x4 Y = RotationY(thetaY);
+        Matrix4x4 Z = RotationZ(thetaZ);
+        return Y * X * Z;
+    }
+
+    public static Matrix4x4 RotationXYZ(float thetaX, float thetaY, float thetaZ, Vector3 translation)
+    {
+        Matrix4x4 ZYX = RotationXYZ(thetaX, thetaY, thetaZ);
+        ZYX[0, 3] = translation.x;
+        ZYX[1, 3] = translation.y;
+        ZYX[2, 3] = translation.z;
+        return ZYX;
+    }
+
     public static Matrix4x4 Translation(Vector3 translation)
     {
         Matrix4x4 res = new Matrix4x4();
