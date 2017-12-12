@@ -77,15 +77,11 @@ public class BoxCollider3D : CustomCollider
         else if (collider is BoxCollider3D)
         {
             var colliderBox = (BoxCollider3D)collider;
-            isColliding = (center.x + size.x / 2f < colliderBox.center.x - colliderBox.size.x / 2f) || (colliderBox.center.x + colliderBox.size.x / 2f < center.x - size.x / 2f);
-            if(!isColliding)
-            {
-                isColliding |= (center.y + size.y / 2f < colliderBox.center.y - colliderBox.size.y / 2f) || (colliderBox.center.y + colliderBox.size.y / 2f < center.y - size.y / 2f);
-                if (!isColliding)
-                {
-                    isColliding |= (center.z + size.z / 2f < colliderBox.center.z - colliderBox.size.z / 2f) || (colliderBox.center.z + colliderBox.size.z / 2f < center.z - size.z / 2f);
-                }
-            }
+            bool overlapX, overlapY, overlapZ;
+            overlapX = !((center.x + size.x / 2f < colliderBox.center.x - colliderBox.size.x / 2f) || (colliderBox.center.x + colliderBox.size.x / 2f < center.x - size.x / 2f));
+            overlapY = !((center.y + size.y / 2f < colliderBox.center.y - colliderBox.size.y / 2f) || (colliderBox.center.y + colliderBox.size.y / 2f < center.y - size.y / 2f));
+            overlapZ = !((center.z + size.z / 2f < colliderBox.center.z - colliderBox.size.z / 2f) || (colliderBox.center.z + colliderBox.size.z / 2f < center.z - size.z / 2f));
+            isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
                 return new CollisionInfo((center - colliderBox.center) / 2f, (center - colliderBox.center).normalized);
@@ -93,7 +89,7 @@ public class BoxCollider3D : CustomCollider
         }
         return null;
     }
-    
+
     protected override void Update()
     {
         base.Update();
