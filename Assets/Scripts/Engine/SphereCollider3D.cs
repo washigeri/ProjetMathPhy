@@ -85,7 +85,7 @@ public class SphereCollider3D : CustomCollider
             if (isColliding)
             {
                 Debug.Log("colliding !");
-                return new CollisionInfo(closestPoint, (colliderBox.Center - Center).normalized, -Radius + Vector3.Distance(closestPoint, Center));
+                return new CollisionInfo(closestPoint, (colliderBox.Center - closestPoint).normalized, Radius - Vector3.Distance(closestPoint, Center));
             }
         }
         return null;

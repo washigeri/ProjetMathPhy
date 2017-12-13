@@ -83,7 +83,7 @@ public class CollisionManager
         const float slop = 0.01f;
         float invMass1 = gameObject1.GetComponent<RigidBodyScript>().invMass;
         float invMass2 = gameObject2.GetComponent<RigidBodyScript>().invMass;
-        Vector3 correction = Mathf.Abs(collision.penetrationDepth - slop) / (invMass1 + invMass2) * percent * collision.normalVector;
+        Vector3 correction = Mathf.Max(collision.penetrationDepth - slop, 0f) / (invMass1 + invMass2) * percent * collision.normalVector;
         gameObject1.transform.position -= invMass1 * correction;
         gameObject2.transform.position += invMass2 * correction;
     }
