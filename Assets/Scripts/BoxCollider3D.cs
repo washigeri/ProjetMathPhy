@@ -112,12 +112,16 @@ public class BoxCollider3D : CustomCollider
         if (collider is SphereCollider3D)
         {
             var colliderSphere = (SphereCollider3D)collider;
-            CollisionInfo collision = colliderSphere.IsColliding(this);
-            if (collision != null)
+            Vector3 closestPoint = ClosestPoint(colliderSphere.Center);
+            bool overlapX = (closestPoint.x >= colliderSphere.Center.x - colliderSphere.Radius) && (closestPoint.x <= colliderSphere.Center.x + colliderSphere.Radius);
+            bool overlapY = (closestPoint.y >= colliderSphere.Center.y - colliderSphere.Radius) && (closestPoint.y <= colliderSphere.Center.y + colliderSphere.Radius);
+            bool overlapZ = (closestPoint.z >= colliderSphere.Center.z - colliderSphere.Radius) && (closestPoint.z <= colliderSphere.Center.z + colliderSphere.Radius);
+            isColliding = overlapX && overlapY && overlapZ;
+            if (isColliding)
             {
-                collision.normalVector *= -1f;
+                Debug.Log("colliding !");
+                return new CollisionInfo(closestPoint, (colliderSphere.Center - Center).normalized, -colliderSphere.Radius + Vector3.Distance(closestPoint, colliderSphere.Center));
             }
-            return collision;
         }
         else if (collider is BoxCollider3D)
         {
@@ -130,7 +134,7 @@ public class BoxCollider3D : CustomCollider
             if (isColliding)
             {
                 float penetrationDepth = Mathf.Max(colliderBox.Size.x / 2f + Size.x / 2f, colliderBox.Size.y / 2f + Size.y / 2f, colliderBox.Size.z / 2f + Size.z / 2f) - Vector3.Distance(Center, colliderBox.Center);
-                return new CollisionInfo((Center - colliderBox.Center) / 2f, (Center - colliderBox.Center).normalized, penetrationDepth);
+                return new CollisionInfo((Center - colliderBox.Center) / 2f, (colliderBox.Center - Center).normalized, penetrationDepth);
             }
         }
         return null;

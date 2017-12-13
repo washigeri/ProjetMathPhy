@@ -71,20 +71,21 @@ public class SphereCollider3D : CustomCollider
             isColliding = SquareDistance(this.Center, colliderSphere.Center) <= Mathf.Pow(Radius + colliderSphere.Radius, 2);
             if (isColliding)
             {
-                return new CollisionInfo((Center * Radius - colliderSphere.Center * colliderSphere.Radius) / (Radius + colliderSphere.Radius), (Center - colliderSphere.Center).normalized, Radius + colliderSphere.Radius - Vector3.Distance(Center, colliderSphere.Center));
+                return new CollisionInfo((Center * Radius - colliderSphere.Center * colliderSphere.Radius) / (Radius + colliderSphere.Radius), (colliderSphere.Center - Center).normalized, Radius + colliderSphere.Radius - Vector3.Distance(Center, colliderSphere.Center));
             }
         }
         else if (collider is BoxCollider3D)
         {
             var colliderBox = (BoxCollider3D)collider;
-            Vector3 closestPoint = ClosestPoint(colliderBox.Center);
-            bool overlapX = (closestPoint.x >= colliderBox.Center.x - colliderBox.Size.x / 2f) && (closestPoint.x <= colliderBox.Center.x + colliderBox.Size.x / 2f);
-            bool overlapY = (closestPoint.y >= colliderBox.Center.y - colliderBox.Size.y / 2f) && (closestPoint.y <= colliderBox.Center.y + colliderBox.Size.y / 2f);
-            bool overlapZ = (closestPoint.z >= colliderBox.Center.z - colliderBox.Size.z / 2f) && (closestPoint.z <= colliderBox.Center.z + colliderBox.Size.z / 2f);
+            Vector3 closestPoint = colliderBox.ClosestPoint(Center);
+            bool overlapX = (closestPoint.x >= Center.x - Radius) && (closestPoint.x <= Center.x + Radius);
+            bool overlapY = (closestPoint.y >= Center.y - Radius) && (closestPoint.y <= Center.y + Radius);
+            bool overlapZ = (closestPoint.z >= Center.z - Radius) && (closestPoint.z <= Center.z + Radius);
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                return new CollisionInfo(closestPoint, (colliderBox.Center - Center).normalized, Radius - Vector3.Distance(colliderBox.ClosestPoint(Center), Center));
+                Debug.Log("colliding !");
+                return new CollisionInfo(closestPoint, (colliderBox.Center - Center).normalized, -Radius + Vector3.Distance(closestPoint, Center));
             }
         }
         return null;
