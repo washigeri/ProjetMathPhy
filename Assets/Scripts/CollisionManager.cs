@@ -26,7 +26,7 @@ public class CollisionManager
         {
             SortAndSweep sortAndSweep = new SortAndSweep(colliders);
             List<SortAndSweep.GameObjectsPair> list = sortAndSweep.CheckForPossibleCollisions();
-            Debug.Log("Sort and sweep result length : " + list.Count);
+
             foreach (SortAndSweep.GameObjectsPair pair in list)
             {
                 var collision = pair.AreColliding();
@@ -71,9 +71,8 @@ public class CollisionManager
         else
         {
             Vector3 frictionImpulse = ComputeFrictionImpulsion(pair, collision, k);
-            Debug.Log("Friction impulse : " + frictionImpulse);
-            rb1.AddForce(frictionImpulse / Time.deltaTime, collision.collisionPoint);
-            rb2.AddForce(-1f * frictionImpulse / Time.deltaTime, collision.collisionPoint);
+            rb1.AddForce(-1f * frictionImpulse / Time.deltaTime, collision.collisionPoint);
+            rb2.AddForce(frictionImpulse / Time.deltaTime, collision.collisionPoint);
         }
         PositionalCorrection(pair.gameObject1, pair.gameObject2, collision);
     }
@@ -84,9 +83,9 @@ public class CollisionManager
         const float slop = 0.01f;
         float invMass1 = gameObject1.GetComponent<RigidBodyScript>().invMass;
         float invMass2 = gameObject2.GetComponent<RigidBodyScript>().invMass;
-        Vector3 correction = Mathf.Max(collision.penetrationDepth - slop, 0f) / (invMass1 + invMass2) * percent * collision.normalVector;
-        gameObject1.transform.position += invMass1 * correction;
-        gameObject2.transform.position -= invMass2 * correction;
+        Vector3 correction = Mathf.Abs(collision.penetrationDepth - slop) / (invMass1 + invMass2) * percent * collision.normalVector;
+        gameObject1.transform.position -= invMass1 * correction;
+        gameObject2.transform.position += invMass2 * correction;
     }
 
     private Vector3 ComputeFrictionImpulsion(SortAndSweep.GameObjectsPair pair, CollisionInfo collision, float j)
@@ -103,13 +102,10 @@ public class CollisionManager
         Vector3 frictionImpulse;
         if (Mathf.Abs(jt) < j * mu)
         {
-            Debug.Log("Case1");
             frictionImpulse = jt * tangent;
         }
         else
         {
-            Debug.Log("Case2");
-
             float dynamicFriction = new Vector2(rb1.dynamicFriction, rb2.dynamicFriction).magnitude;
             frictionImpulse = -1f * tangent * dynamicFriction;
         }
