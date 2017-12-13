@@ -19,13 +19,19 @@ public class PlayerController : MonoBehaviour
     private bool isRotating;    // Is the camera being rotated?
     private bool isZooming;     // Is the camera zooming?
 
-    private string Sphere = "Prefabs/Sphere";
-    private bool sphereSelected = true;
+    //private string Sphere = "Prefabs/Sphere";
+    //private bool sphereSelected = true;
 
-    private string Cube = "Prefabs/Cube";
-    private bool cubeSelected = false;
+    //private string Cube = "Prefabs/Cube";
+    //private bool cubeSelected = false;
+
+    private int objectSelectIndex = 0;
+    private int prefabsCount = 3;
+    private string[] objects = new string[] { "Prefabs/Sphere", "Prefabs/Cube", "Prefabs/OBB" };
 
     private bool physicsDisabled = false;
+
+    private bool rotateOBBDisabled = true;
 
     private string item;
 
@@ -40,10 +46,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (sphereSelected)
-            item = Sphere;
-        else if (cubeSelected)
-            item = Cube;
+        //if (sphereSelected)
+        //    item = Sphere;
+        //else if (cubeSelected)
+        //    item = Cube;
         // Get the left mouse button
         if (Input.GetMouseButtonDown(0))
         {
@@ -102,9 +108,9 @@ public class PlayerController : MonoBehaviour
 
         if (count == 0)
         {
-            if (Input.GetButton("Jump"))
+            if (Input.GetButtonDown("Jump"))
             {
-                GameObject sphere = Instantiate(Resources.Load(item), transform.position, Quaternion.identity) as GameObject;
+                GameObject sphere = Instantiate(Resources.Load(objects[objectSelectIndex]), transform.position, Quaternion.identity) as GameObject;
                 sphere.GetComponent<RigidBodyScript>().AddForce(transform.forward.normalized * spawnSpeed * 200f);
                 count = cooldown;
             }
@@ -116,7 +122,7 @@ public class PlayerController : MonoBehaviour
                 count = 0;
         }
 
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             if (!physicsDisabled)
             {
@@ -137,19 +143,30 @@ public class PlayerController : MonoBehaviour
                 physicsDisabled = false;
             }
         }
-        if (Input.GetButton("Fire2"))
+        if (Input.GetButtonDown("Fire2"))
         {
-            if (sphereSelected)
+            //if (sphereSelected)
+            //{
+            //    Debug.Log("Sphere selected");
+            //    sphereSelected = false;
+            //    cubeSelected = true;
+            //}
+            //else
+            //{
+            //    Debug.Log("Cube selected");
+            //    sphereSelected = true;
+            //    cubeSelected = false;
+            //}
+            objectSelectIndex++;
+            objectSelectIndex %= prefabsCount;
+        }
+        if (Input.GetButtonDown("Fire3"))
+        {
+            rotateOBBDisabled = !rotateOBBDisabled;
+            GameObject[] OBBs = GameObject.FindGameObjectsWithTag("OBB");
+            foreach(GameObject go in OBBs)
             {
-                Debug.Log("Sphere selected");
-                sphereSelected = false;
-                cubeSelected = true;
-            }
-            else
-            {
-                Debug.Log("Cube selected");
-                sphereSelected = true;
-                cubeSelected = false;
+                go.GetComponent<OBBCollider3D>().doRotate = !go.GetComponent<OBBCollider3D>().doRotate;
             }
         }
     }

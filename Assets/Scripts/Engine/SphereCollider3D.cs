@@ -84,8 +84,17 @@ public class SphereCollider3D : CustomCollider
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                Debug.Log("colliding !");
                 return new CollisionInfo(closestPoint, (colliderBox.Center - closestPoint).normalized, Radius - Vector3.Distance(closestPoint, Center));
+            }
+        }
+        else if (collider is OBBCollider3D)
+        {
+            var colliderOBB = (OBBCollider3D)collider;
+            Vector3 closestPoint = colliderOBB.ClosestPoint(Center);
+            isColliding = Vector3.Distance(closestPoint, Center) <= Radius;
+            if (isColliding)
+            {
+                return new CollisionInfo(closestPoint, (colliderOBB.Center - closestPoint).normalized, Radius - Vector3.Distance(Center, closestPoint));
             }
         }
         return null;

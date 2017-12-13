@@ -89,7 +89,6 @@ public class GameManager : MonoBehaviour {
     {
         if(Input.GetButtonDown("Cancel"))
         {
-            Debug.Log("should quit");
             Quit();
         }
     }

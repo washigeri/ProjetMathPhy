@@ -156,6 +156,126 @@ public class BoxCollider3D : CustomCollider
                 return new CollisionInfo((Center - colliderBox.Center) / 2f, (colliderBox.Center - closestPoint).normalized, penetrationDepth);
             }
         }
+        else if (collider is OBBCollider3D)
+        {
+            var colliderOBB = (OBBCollider3D)collider;
+            Vector3[] axis = new Vector3[] { colliderOBB.axis[0], colliderOBB.axis[1], colliderOBB.axis[2] };
+            Vector3[] axisCollider = colliderOBB.Axis;
+            Vector3 halfSize = Size / 2f;
+            Vector3 halfSizeOBB = colliderOBB.Size / 2f;
+            float ra, rb;
+
+            Matrix3x3 R = new Matrix3x3();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    R[i, j] = Vector3.Dot(axis[i], axisCollider[j]);
+                }
+            }
+
+            Vector3 t = colliderOBB.Center - Center;
+
+            Vector3 tCopy = new Vector3
+            {
+                x = Vector3.Dot(t, axis[0]),
+                y = Vector3.Dot(t, axis[1]),
+                z = Vector3.Dot(t, axis[2])
+            };
+
+            float epsilon = 0.00001f;
+            Matrix3x3 AbsR = new Matrix3x3();
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    AbsR[i, j] = Mathf.Abs(R[i, j]) + epsilon;
+                }
+            }
+
+            for (int i = 0; i < 3; ++i)
+            {
+                ra = halfSize[i];
+                rb = halfSizeOBB[0] * AbsR[i, 0] + halfSizeOBB[1] * AbsR[i, 1] + halfSizeOBB[2] * AbsR[i, 2];
+                if (Mathf.Abs(t[i]) > ra + rb)
+                {
+                    return null;
+                }
+            }
+
+            for (int i = 0; i < 3; ++i)
+            {
+                ra = halfSize[0] * AbsR[i, 0] + halfSize[1] * AbsR[i, 1] + halfSize[2] * AbsR[i, 2];
+                rb = halfSizeOBB[i];
+                if (Mathf.Abs(t.x * R[0, i] + t.y * R[1, i] + t.z * R[2, i]) > ra + rb)
+                {
+                    return null;
+                }
+            }
+
+            ra = halfSize.y * AbsR[2, 0] + halfSize.z * AbsR[1, 0];
+            rb = halfSizeOBB.y * AbsR[0, 2] + halfSizeOBB.z * AbsR[0, 1];
+            if (Mathf.Abs(t.z * R[1, 0] - t.y * R[2, 0]) > ra + rb)
+            {
+                return null;
+            }
+
+            ra = halfSize.y * AbsR[2, 1] + halfSize.z * AbsR[1, 1];
+            rb = halfSizeOBB.x * AbsR[0, 2] + halfSizeOBB.z * AbsR[0, 0];
+            if (Mathf.Abs(t.z * R[1, 1] - t.y * R[2, 1]) > ra + rb)
+            {
+                return null;
+            }
+
+            ra = halfSize.y * AbsR[2, 2] + halfSize.z * AbsR[1, 2];
+            rb = halfSizeOBB.x * AbsR[0, 1] + halfSizeOBB.y * AbsR[0, 0];
+            if (Mathf.Abs(t.z * R[1, 2] - t.y * R[2, 2]) > ra + rb)
+            {
+                return null;
+            }
+            ra = halfSize.x * AbsR[2, 0] + halfSize.z * AbsR[0, 0];
+            rb = halfSizeOBB.y * AbsR[1, 2] + halfSizeOBB.z * AbsR[1, 1];
+            if (Mathf.Abs(t.x * R[2, 0] - t.z * R[0, 0]) > ra + rb)
+            {
+                return null;
+            }
+            ra = halfSize.x * AbsR[2, 1] + halfSize.z * AbsR[0, 1];
+            rb = halfSizeOBB.x * AbsR[1, 2] + halfSizeOBB.z * AbsR[1, 0];
+            if (Mathf.Abs(t.x * R[2, 1] - t.z * R[0, 1]) > ra + rb)
+            {
+                return null;
+            }
+            ra = halfSize.x * AbsR[2, 2] + halfSize.z * AbsR[0, 2];
+            rb = halfSizeOBB.x * AbsR[1, 1] + halfSizeOBB.y * AbsR[1, 0];
+            if (Mathf.Abs(t.x * R[2, 2] - t.z * R[0, 2]) > ra + rb)
+            {
+                return null;
+            }
+            ra = halfSize.x * AbsR[1, 0] + halfSize.y * AbsR[0, 0];
+            rb = halfSizeOBB.y * AbsR[2, 2] + halfSizeOBB.z * AbsR[2, 1];
+            if (Mathf.Abs(t.y * R[0, 0] - t.x * R[1, 0]) > ra + rb)
+            {
+                return null;
+            }
+            ra = halfSize.x * AbsR[1, 1] + halfSize.y * AbsR[0, 1];
+            rb = halfSizeOBB.x * AbsR[2, 2] + halfSizeOBB.z * AbsR[2, 0];
+            if (Mathf.Abs(t.y * R[0, 1] - t.x * R[1, 1]) > ra + rb)
+            {
+                return null;
+            }
+            ra = halfSize.x * AbsR[1, 2] + halfSize.y * AbsR[0, 2];
+            rb = halfSizeOBB.x * AbsR[2, 1] + halfSizeOBB.y * AbsR[2, 0];
+            if (Mathf.Abs(t.y * R[0, 2] - t.x * R[1, 2]) > ra + rb)
+            {
+                return null;
+            }
+
+            Vector3 closestPoint = ClosestPoint(colliderOBB.Center);
+            Vector3 closestPointCollider = colliderOBB.ClosestPoint(Center);
+            float penetrationDepth = Mathf.Abs(Vector3.Distance(colliderOBB.Center, closestPointCollider) + Vector3.Distance(Center, closestPoint) - Vector3.Distance(Center, colliderOBB.Center));
+
+            return new CollisionInfo(closestPoint, (colliderOBB.Center - closestPoint).normalized, penetrationDepth / 4f);
+        }
         return null;
     }
 
