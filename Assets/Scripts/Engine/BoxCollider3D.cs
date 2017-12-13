@@ -133,17 +133,19 @@ public class BoxCollider3D : CustomCollider
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                Debug.Log("colliding !");
-                return new CollisionInfo(closestPoint, (colliderSphere.Center - closestPoint).normalized, colliderSphere.Radius - Vector3.Distance(closestPoint, colliderSphere.Center));
+                return new CollisionInfo(closestPoint, (closestPoint - Center).normalized, colliderSphere.Radius - Vector3.Distance(closestPoint, colliderSphere.Center));
             }
         }
         else if (collider is BoxCollider3D)
         {
             var colliderBox = (BoxCollider3D)collider;
             bool overlapX, overlapY, overlapZ;
-            overlapX = (Center.x - Size.x / 2f <= colliderBox.Center.x - colliderBox.Size.x / 2f && colliderBox.Center.x - colliderBox.Size.x / 2f <= Center.x + Size.x / 2f);
-            overlapY = (Center.y - Size.y / 2f <= colliderBox.Center.y - colliderBox.Size.y / 2f && colliderBox.Center.y - colliderBox.Size.y / 2f <= Center.y + Size.y / 2f);
-            overlapZ = (Center.z - Size.z / 2f <= colliderBox.Center.z - colliderBox.Size.z / 2f && colliderBox.Center.z - colliderBox.Size.z / 2f <= Center.z + Size.z / 2f);
+            overlapX = ((Center.x - Size.x / 2f <= colliderBox.Center.x - colliderBox.Size.x / 2f && colliderBox.Center.x - colliderBox.Size.x / 2f <= Center.x + Size.x / 2f)) ||
+                       ((colliderBox.Center.x - colliderBox.Size.x / 2f <= Center.x - Size.x / 2f && Center.x - Size.x / 2f <= colliderBox.Center.x + colliderBox.Size.x / 2f));
+            overlapY = ((Center.y - Size.y / 2f <= colliderBox.Center.y - colliderBox.Size.y / 2f && colliderBox.Center.y - colliderBox.Size.y / 2f <= Center.y + Size.y / 2f)) ||
+                       ((colliderBox.Center.y - colliderBox.Size.y / 2f <= Center.y - Size.y / 2f && Center.y - Size.y / 2f <= colliderBox.Center.y + colliderBox.Size.y / 2f));
+            overlapZ = ((Center.z - Size.z / 2f <= colliderBox.Center.z - colliderBox.Size.z / 2f && colliderBox.Center.z - colliderBox.Size.z / 2f <= Center.z + Size.z / 2f)) ||
+                       ((colliderBox.Center.z - colliderBox.Size.z / 2f <= Center.z - Size.z / 2f && Center.z - Size.z / 2f <= colliderBox.Center.z + colliderBox.Size.z / 2f));
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
@@ -151,7 +153,6 @@ public class BoxCollider3D : CustomCollider
                 float penetrationDepth = Mathf.Min(colliderBox.Size.x / 2f + Size.x / 2f - Mathf.Abs(Center.x - colliderBox.Center.x),
                                                    colliderBox.Size.y / 2f + Size.y / 2f - Mathf.Abs(Center.y - colliderBox.Center.y),
                                                    colliderBox.Size.z / 2f + Size.z / 2f - Mathf.Abs(Center.z - colliderBox.Center.z));
-                Debug.Log("depth =" + penetrationDepth);
                 return new CollisionInfo((Center - colliderBox.Center) / 2f, (colliderBox.Center - closestPoint).normalized, penetrationDepth);
             }
         }

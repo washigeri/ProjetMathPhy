@@ -5,22 +5,43 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
-	public void LoadScene(int index)
-    {
-        SceneManager.LoadScene(index);
-    }
+    GameObject physicsManager = null;
 
     private void Awake()
     {
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    public void LoadSceneByIndex(int index)
+    {
+        SceneManager.LoadScene(index);
+    }
+
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit ();
+#endif
     }
 
     private void OnSceneUnloaded(Scene scene)
     {
-        GameObject physManager = GameObject.Find("PhysicsManager");
-        if(physManager != null)
+        Debug.Log("unloading scene");
+        if(physicsManager != null)
         {
-            Destroy(physManager);
+            Destroy(physicsManager);
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("loading scene");
+        if (physicsManager == null)
+        {
+            physicsManager = Instantiate(Resources.Load("Prefabs/PhysicsManager")) as GameObject;
         }
     }
 
