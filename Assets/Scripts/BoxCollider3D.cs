@@ -4,8 +4,6 @@ public class BoxCollider3D : CustomCollider
 {
     public Vector3 center = Vector3.zero;
 
-    public Vector3 size = Vector3.one;
-
     public Vector3 Center
     {
         get
@@ -18,13 +16,54 @@ public class BoxCollider3D : CustomCollider
     {
         get
         {
-            return new Vector3(size.x * transform.localScale.x, size.y * transform.localScale.y, size.z * transform.localScale.z);
+            return GetComponent<Renderer>().bounds.size;
         }
     }
 
     internal override Vector3 ClosestPoint(Vector3 point)
     {
-        throw new System.NotImplementedException();
+        Vector3 size = Size;
+        Vector3 center = Center;
+        Vector3 max = center + size / 2f;
+        Vector3 min = center - size / 2f;
+        Vector3 result = new Vector3();
+        if(point.x > max.x)
+        {
+            result.x = max.x;
+        }
+        else if(point.x < min.x)
+        {
+            result.x = min.x;
+        }
+        else
+        {
+            result.x = point.x;
+        }
+        if(point.y > max.y)
+        {
+            result.y = max.y;
+        }
+        else if(point.y < min.y)
+        {
+            result.y = min.y;
+        }
+        else
+        {
+            result.y = point.y;
+        }
+        if(point.z > max.z)
+        {
+            result.z = max.z;
+        }
+        else if(point.z < min.z)
+        {
+            result.z = min.z;
+        }
+        else
+        {
+            result.z = point.z;
+        }
+        return result;
     }
 
     internal override float GetMaxXYZ(int axe)
@@ -90,15 +129,39 @@ public class BoxCollider3D : CustomCollider
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                return new CollisionInfo((Center - colliderBox.Center) / 2f, (Center - colliderBox.Center).normalized);
+                float penetrationDepth = Mathf.Max(colliderBox.Size.x / 2f + Size.x / 2f, colliderBox.Size.y / 2f + Size.y / 2f, colliderBox.Size.z / 2f + Size.z / 2f) - Vector3.Distance(Center, colliderBox.Center);
+                return new CollisionInfo((Center - colliderBox.Center) / 2f, (Center - colliderBox.Center).normalized, penetrationDepth);
             }
         }
         return null;
     }
 
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0, 1, 0);
-        Gizmos.DrawWireCube(Center, Size);
+        Vector3 size = Size;
+        Vector3 center = Center;
+        Vector3 p1, p2, p3, p4, p5, p6, p7, p8;
+        p1 = Center + new Vector3(-size.x / 2f, -size.y / 2f, -size.z / 2f);
+        p2 = Center + new Vector3(-size.x / 2f, -size.y / 2f, size.z / 2f);
+        p3 = Center + new Vector3(-size.x / 2f, size.y / 2f, size.z / 2f);
+        p4 = Center + new Vector3(-size.x / 2f, size.y / 2f, -size.z / 2f);
+        p5 = Center + new Vector3(size.x / 2f, size.y / 2f, size.z / 2f);
+        p6 = Center + new Vector3(size.x / 2f, -size.y / 2f, size.z / 2f);
+        p7 = Center + new Vector3(size.x / 2f, size.y / 2f, -size.z / 2f);
+        p8 = Center + new Vector3(size.x / 2f, -size.y / 2f, -size.z / 2f);
+        Gizmos.DrawLine(p1, p2);
+        Gizmos.DrawLine(p3, p2);
+        Gizmos.DrawLine(p1, p4);
+        Gizmos.DrawLine(p1, p8);
+        Gizmos.DrawLine(p2, p6);
+        Gizmos.DrawLine(p3, p4);
+        Gizmos.DrawLine(p4, p7);
+        Gizmos.DrawLine(p7, p8);
+        Gizmos.DrawLine(p3, p5);
+        Gizmos.DrawLine(p5, p7);
+        Gizmos.DrawLine(p5, p6);
+        Gizmos.DrawLine(p6, p8);
     }
 }
