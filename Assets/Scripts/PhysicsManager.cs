@@ -18,7 +18,6 @@ public class PhysicsManager : MonoBehaviour
     // Use this for initialization
     private void Awake()
     {
-        DontDestroyOnLoad(this);
         CustomCollider[] colliders = FindObjectsOfType<CustomCollider>();
         collisionManager = new CollisionManager(colliders);
         RigidBodyScript[] rbs = FindObjectsOfType<RigidBodyScript>();
@@ -28,6 +27,10 @@ public class PhysicsManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        CustomCollider[] colliders = FindObjectsOfType<CustomCollider>();
+        RigidBodyScript[] rbs = FindObjectsOfType<RigidBodyScript>();
+        forceManager.AddRB(rbs);
+        collisionManager.AddNewCollider(colliders);
         forceManager.ForceUpdate();
         collisionManager.CollisionUpdate();
     }
