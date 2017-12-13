@@ -27,6 +27,7 @@ public class RigidBodyScript : MonoBehaviour
     [HideInInspector]
     public Vector3 velocity;
 
+    [HideInInspector]
     public Vector3 angularSpeed;
 
     [HideInInspector]
@@ -115,16 +116,15 @@ public class RigidBodyScript : MonoBehaviour
     // Update is called once per frame
     public void NewtonUpdate()
     {
-        airDrag = -1f * 0.5f * PhysicsManager.airDensity * linearDrag * areaDrag * velocity.sqrMagnitude * velocity.normalized;
+        airDrag = -1f * 0.5f * PhysicsManager.instance.airDensity * linearDrag * areaDrag * velocity.sqrMagnitude * velocity.normalized;
         AddForce(airDrag);
         if (useGravity)
-            AddForce(PhysicsManager.gravityMultiplied * mass);
-
+            AddForce(PhysicsManager.instance.gravityMultiplied * mass);
         Vector3 acceleration = ComputeAcceleration();
         Vector3 angularAcceleration = ComputeAngularAcceleration();
         velocity = velocity + (acceleration * Time.deltaTime);
         gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
-        angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
+        angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime * Mathf.Rad2Deg);
         gameObject.transform.Rotate(angularSpeed * Time.deltaTime);
 
         UpdateForces();
@@ -144,7 +144,7 @@ public class RigidBodyScript : MonoBehaviour
     private Vector3 ComputeAngularAcceleration()
     {
         Vector3 res = new Vector3(0, 0, 0);
-        Vector3 angularDragM = -1f * 0.5f * angularDrag * PhysicsManager.airDensity * areaDrag * (angularSpeed * Mathf.Deg2Rad).sqrMagnitude * angularSpeed.normalized;
+        Vector3 angularDragM = -1f * 0.5f * angularDrag * PhysicsManager.instance.airDensity * areaDrag * (angularSpeed * Mathf.Deg2Rad).sqrMagnitude * angularSpeed.normalized;
         res += angularDragM;
         foreach (Force force in forces)
         {
@@ -156,8 +156,7 @@ public class RigidBodyScript : MonoBehaviour
                 res += value;
             }
         }
-        res = inertiaMatrixInv * res;
-        return res * Mathf.Rad2Deg;
+        return inertiaMatrixInv * res;
     }
 
     public void UpdateForces()

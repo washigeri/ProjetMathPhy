@@ -133,7 +133,7 @@ public class BoxCollider3D : CustomCollider
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                return new CollisionInfo(closestPoint, (closestPoint - Center).normalized, colliderSphere.Radius - Vector3.Distance(closestPoint, colliderSphere.Center));
+                return new CollisionInfo(closestPoint, (colliderSphere.Center - closestPoint).normalized, colliderSphere.Radius - Vector3.Distance(closestPoint, colliderSphere.Center));
             }
         }
         else if (collider is BoxCollider3D)

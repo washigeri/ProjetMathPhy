@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float spawnSpeed = 20f;
+    public float cooldown = 1.5f;
+    private float count = 0f;
+
     public float moveSpeed = 10f;
 
     public float turnSpeed = 4.0f;      // Speed of camera turning when mouse moves in along an axis
@@ -15,8 +19,31 @@ public class PlayerController : MonoBehaviour
     private bool isRotating;    // Is the camera being rotated?
     private bool isZooming;     // Is the camera zooming?
 
+    private string Sphere = "Prefabs/Sphere";
+    private bool sphereSelected = true;
+
+    private string Cube = "Prefabs/Cube";
+    private bool cubeSelected = false;
+
+    private bool physicsDisabled = false;
+
+    private string item;
+
+    private Vector3 gravity;
+    private float airDensity;
+
+    private void Start()
+    {
+        gravity = PhysicsManager.instance.gravity;
+        airDensity = PhysicsManager.instance.airDensity;
+    }
+
     private void Update()
     {
+        if (sphereSelected)
+            item = Sphere;
+        else if (cubeSelected)
+            item = Cube;
         // Get the left mouse button
         if (Input.GetMouseButtonDown(0))
         {
@@ -71,6 +98,59 @@ public class PlayerController : MonoBehaviour
 
             Vector3 move = pos.y * zoomSpeed * transform.forward;
             transform.Translate(move, Space.World);
+        }
+
+        if (count == 0)
+        {
+            if (Input.GetButton("Jump"))
+            {
+                GameObject sphere = Instantiate(Resources.Load(item), transform.position, Quaternion.identity) as GameObject;
+                sphere.GetComponent<RigidBodyScript>().AddForce(transform.forward.normalized * spawnSpeed * 200f);
+                count = cooldown;
+            }
+        }
+        else
+        {
+            count -= Time.deltaTime;
+            if (count < 0)
+                count = 0;
+        }
+
+        if (Input.GetButton("Fire1"))
+        {
+            if (!physicsDisabled)
+            {
+                Debug.Log("Physics : OFF");
+                PhysicsManager pm = PhysicsManager.instance;
+                pm.collisionManager.useFriction = false;
+                pm.airDensity = 0;
+                pm.gravity = Vector3.zero;
+                physicsDisabled = true;
+            }
+            else
+            {
+                Debug.Log("Physics : ON");
+                PhysicsManager pm = PhysicsManager.instance;
+                pm.collisionManager.useFriction = true;
+                pm.airDensity = airDensity;
+                pm.gravity = gravity;
+                physicsDisabled = false;
+            }
+        }
+        if (Input.GetButton("Fire2"))
+        {
+            if (sphereSelected)
+            {
+                Debug.Log("Sphere selected");
+                sphereSelected = false;
+                cubeSelected = true;
+            }
+            else
+            {
+                Debug.Log("Cube selected");
+                sphereSelected = true;
+                cubeSelected = false;
+            }
         }
     }
 }

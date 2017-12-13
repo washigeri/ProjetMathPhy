@@ -148,8 +148,8 @@ MonoBehaviour:
   linearDrag: 0.47
   angularDrag: 0.47
   restitution: 0.5
-  staticFriction: 0.5
-  dynamicFriction: 0.5
+  staticFriction: 0
+  dynamicFriction: 0
   velocity: {x: 0, y: 0, z: 0}
   angularSpeed: {x: 0, y: 0, z: 0}
   invMass: 0
@@ -205,7 +205,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 296500782}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &296500787
 Transform:
   m_ObjectHideFlags: 0
@@ -213,11 +213,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 296500782}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 31.57, y: 6.32, z: -0.035479}
-  m_LocalScale: {x: 1.302873, y: 6.1629686, z: 6.814833}
+  m_LocalPosition: {x: 30.4, y: 4.27, z: -0.035478}
+  m_LocalScale: {x: 15.5206995, y: 2.142379, z: 70.73486}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &348522368
 GameObject:
@@ -255,8 +255,8 @@ MonoBehaviour:
   linearDrag: 0.47
   angularDrag: 0.47
   restitution: 0.5
-  staticFriction: 0.5
-  dynamicFriction: 0.5
+  staticFriction: 0
+  dynamicFriction: 0
   velocity: {x: 0, y: 0, z: 0}
   angularSpeed: {x: 0, y: 0, z: 0}
   invMass: 0
@@ -312,20 +312,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 348522368}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &348522373
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 348522368}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -30.8, y: 6.3, z: -0.035479}
-  m_LocalScale: {x: 1.302873, y: 6.1629686, z: 6.7745056}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -30.8, y: 6.3, z: -1.8}
+  m_LocalScale: {x: 7.9609284, y: 1.4895643, z: 68.075424}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &570427206
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +470,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 21.636002, y: 0, z: 0}
 --- !u!114 &919179723
 MonoBehaviour:
@@ -483,6 +483,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 715d9d43673ee4b4b93c1d49ed50b556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnSpeed: 20
+  cooldown: 1.5
   moveSpeed: 20
   turnSpeed: 4
   panSpeed: 4
@@ -523,8 +525,8 @@ MonoBehaviour:
   linearDrag: 0.47
   angularDrag: 0.47
   restitution: 0.5
-  staticFriction: 0.5
-  dynamicFriction: 0.5
+  staticFriction: 0
+  dynamicFriction: 0
   velocity: {x: 0, y: 0, z: 0}
   angularSpeed: {x: 0, y: 0, z: 0}
   invMass: 0
@@ -580,128 +582,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 956200551}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &956200556
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 956200551}
-  m_LocalRotation: {x: -0.5, y: -0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.5, y: 6.5, z: 31.4}
-  m_LocalScale: {x: 1.302873, y: 6.1629686, z: 6.3244805}
+  m_LocalRotation: {x: 0.5, y: -0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 0.5, y: 4.6, z: 31.4}
+  m_LocalScale: {x: 12.298031, y: 1.4251795, z: 68.42488}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 90}
---- !u!1 &1223419309
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1223419314}
-  - component: {fileID: 1223419313}
-  - component: {fileID: 1223419312}
-  - component: {fileID: 1223419311}
-  - component: {fileID: 1223419310}
-  m_Layer: 0
-  m_Name: Sphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1223419310
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1223419309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b612fc6a80df54438aa34a1abe2ed63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mass: 1
-  useGravity: 1
-  shape: 1
-  linearDrag: 0.47
-  angularDrag: 0.47
-  restitution: 0.5
-  staticFriction: 5
-  dynamicFriction: 5
-  velocity: {x: 0, y: 0, z: 0}
-  angularSpeed: {x: 0, y: 0, z: 30}
-  invMass: 0
---- !u!114 &1223419311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1223419309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81551a8db630cc7419d0831d74a0baa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  center: {x: 0, y: 0, z: 0}
-  radius: 0.5
---- !u!23 &1223419312
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1223419309}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 2100000, guid: 72b6b1ea2f7b1014aa42e284a7e7f430, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!33 &1223419313
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1223419309}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1223419314
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1223419309}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.05, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: -90}
 --- !u!1 &1724184275
 GameObject:
   m_ObjectHideFlags: 0
@@ -738,8 +632,8 @@ MonoBehaviour:
   linearDrag: 0.47
   angularDrag: 0.47
   restitution: 0.5
-  staticFriction: 0.5
-  dynamicFriction: 0.5
+  staticFriction: 1
+  dynamicFriction: 1
   velocity: {x: 0, y: 0, z: 0}
   angularSpeed: {x: 0, y: 0, z: 0}
   invMass: 0
@@ -795,7 +689,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1724184275}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1724184280
 Transform:
   m_ObjectHideFlags: 0
@@ -804,7 +698,7 @@ Transform:
   m_GameObject: {fileID: 1724184275}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 6.266758, y: 6.2667603, z: 6.2667603}
+  m_LocalScale: {x: 64.357155, y: 6.2667603, z: 67.88716}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -845,8 +739,8 @@ MonoBehaviour:
   linearDrag: 0.47
   angularDrag: 0.47
   restitution: 0.5
-  staticFriction: 0.5
-  dynamicFriction: 0.5
+  staticFriction: 0
+  dynamicFriction: 0
   velocity: {x: 0, y: 0, z: 0}
   angularSpeed: {x: 0, y: 0, z: 0}
   invMass: 0
@@ -902,20 +796,20 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1881794365}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1881794370
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1881794365}
-  m_LocalRotation: {x: 0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: 0.5, y: 6.5, z: -31.3}
-  m_LocalScale: {x: 1.302873, y: 6.1629686, z: 6.3244805}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: -0.5, w: 0.5}
+  m_LocalPosition: {x: 0.5, y: 5.3, z: -32.79}
+  m_LocalScale: {x: 7.6463094, y: 2.1902149, z: 61.840084}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 90}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: -90}
 --- !u!1 &1911262551
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,7 +837,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1911262553
 MonoBehaviour:

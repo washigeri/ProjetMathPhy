@@ -5,19 +5,34 @@ using UnityEditor;
 
 public class PhysicsManager : MonoBehaviour
 {
-    public static Vector3 gravity = new Vector3(0, -9.81f, 0);
-    public static float gravityMultiplier = 1f;
-    public static float airDensity = 1.2f;
+    public Vector3 gravity = new Vector3(0, -9.81f, 0);
+    public float gravityMultiplier = 1f;
+    public float airDensity = 1.2f;
 
     [HideInInspector]
-    public static Vector3 gravityMultiplied = gravity * gravityMultiplier;
+    public static PhysicsManager instance = null;
 
-    private ForceManager forceManager;
-    private CollisionManager collisionManager;
+    [HideInInspector]
+    public Vector3 gravityMultiplied;
 
-    // Use this for initialization
+    [HideInInspector]
+    public ForceManager forceManager;
+
+    [HideInInspector]
+    public CollisionManager collisionManager;
+
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(this);
+    }
+
+    // Use this for initialization
+    private void Start()
+    {
+        gravityMultiplied = gravity * gravityMultiplier;
         CustomCollider[] colliders = FindObjectsOfType<CustomCollider>();
         collisionManager = new CollisionManager(colliders);
         RigidBodyScript[] rbs = FindObjectsOfType<RigidBodyScript>();
@@ -27,6 +42,7 @@ public class PhysicsManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        gravityMultiplied = gravity * gravityMultiplier;
         CustomCollider[] colliders = FindObjectsOfType<CustomCollider>();
         RigidBodyScript[] rbs = FindObjectsOfType<RigidBodyScript>();
         forceManager.AddRB(rbs);
