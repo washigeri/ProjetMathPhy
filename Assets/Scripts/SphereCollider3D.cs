@@ -71,7 +71,7 @@ public class SphereCollider3D : CustomCollider
             isColliding = SquareDistance(this.Center, colliderSphere.Center) <= Mathf.Pow(Radius + colliderSphere.Radius, 2);
             if (isColliding)
             {
-                return new CollisionInfo((this.Center * this.Radius - colliderSphere.Center * colliderSphere.Radius) / (this.Radius + colliderSphere.Radius), (this.Center - colliderSphere.Center).normalized);
+                return new CollisionInfo((this.Center * this.Radius - colliderSphere.Center * colliderSphere.Radius) / (this.Radius + colliderSphere.Radius), (this.Center - colliderSphere.Center).normalized, this.Radius + colliderSphere.Radius - Vector3.Distance(this.Center, colliderSphere.Center));
             }
         }
         else if (collider is BoxCollider3D)
@@ -84,7 +84,7 @@ public class SphereCollider3D : CustomCollider
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                return new CollisionInfo(closestPoint, (colliderBox.Center - Center).normalized);
+                return new CollisionInfo(closestPoint, (colliderBox.Center - Center).normalized, 0);
             }
         }
         return null;

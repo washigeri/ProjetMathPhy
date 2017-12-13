@@ -90,7 +90,7 @@ public class BoxCollider3D : CustomCollider
             isColliding = overlapX && overlapY && overlapZ;
             if (isColliding)
             {
-                return new CollisionInfo((Center - colliderBox.Center) / 2f, (Center - colliderBox.Center).normalized);
+                return new CollisionInfo((Center - colliderBox.Center) / 2f, (Center - colliderBox.Center).normalized, 0);
             }
         }
         return null;

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CollisionManager
 {
+    private bool USE_COMPUTED_FRICTION = true;
+
     private List<GameObject> colliders;
 
     public CollisionManager(CustomCollider[] colliderRes)
@@ -30,13 +32,13 @@ public class CollisionManager
                 var collision = pair.AreColliding();
                 if (collision != null)
                 {
-                    ResolveCollisionWithImulse(pair, collision);
+                    ResolveCollisionWithImpulse(pair, collision);
                 }
             }
         }
     }
 
-    private void ResolveCollisionWithImulse(SortAndSweep.GameObjectsPair pair, CollisionInfo collision)
+    private void ResolveCollisionWithImpulse(SortAndSweep.GameObjectsPair pair, CollisionInfo collision)
     {
         GameObject gameObject1 = pair.gameObject1;
         GameObject gameObject2 = pair.gameObject2;
@@ -48,9 +50,6 @@ public class CollisionManager
 
         Vector3 vrel = v1 - v2;
         float elasticity = Mathf.Min(rb1.restitution, rb2.restitution);
-
-        float m1 = rb1.mass;
-        float m2 = rb2.mass;
         float k = (elasticity + 1) * Vector3.Dot(vrel, collision.normalVector) / ((rb1.invMass + rb2.invMass) * Vector3.Dot(collision.normalVector, collision.normalVector));
 
         Vector3 w1 = rb1.angularSpeed;
@@ -62,36 +61,21 @@ public class CollisionManager
         Vector3 u1 = Vector3.Cross(w1, collision.collisionPoint - gameObject1.transform.position);
         Vector3 u2 = Vector3.Cross(w2, collision.collisionPoint - gameObject2.transform.position);
 
-        Vector3 urel = u1 - u2;
-
-        float kr = (elasticity + 1) * Vector3.Dot(urel, collision.normalVector);
-
-        Vector3 factor1 = (rb1.invMass + rb2.invMass) * collision.normalVector;
-        Vector3 factor2 = Vector3.Cross(rb1.inertiaMatrixInv * (Vector3.Cross(r1, collision.normalVector)), r1);
-        Vector3 factor3 = Vector3.Cross(rb2.inertiaMatrixInv * (Vector3.Cross(r2, collision.normalVector)), r2);
-
-        kr /= Vector3.Dot(factor1 + factor2 + factor3, collision.normalVector);
         rb1.velocity -= k * collision.normalVector * rb1.invMass;
         rb2.velocity += k * collision.normalVector * rb2.invMass;
-
-        rb1.angularSpeed -= rb1.inertiaMatrixInv * Vector3.Cross(r1, kr * collision.normalVector) * Mathf.Rad2Deg;
-        rb2.angularSpeed += rb2.inertiaMatrixInv * Vector3.Cross(r2, kr * collision.normalVector) * Mathf.Rad2Deg;
-
-        if (pair.gameObject1.GetComponent<RigidBodyScript>().invMass == 0)
+        if (!USE_COMPUTED_FRICTION)
         {
-            Debug.Log("Stop1");
-            gameObject2.GetComponent<RigidBodyScript>().velocity = Vector3.zero;
-            gameObject2.GetComponent<RigidBodyScript>().angularSpeed = Vector3.zero;
-            pair.gameObject2.GetComponent<RigidBodyScript>().AddForce(-1f * PhysicsManager.gravityMultiplied * pair.gameObject2.GetComponent<RigidBodyScript>().mass, collision.collisionPoint);
+            rb1.AddForce(rb1.staticFriction * u1);
+            rb2.AddForce(rb2.staticFriction * u2);
         }
-        if (pair.gameObject2.GetComponent<RigidBodyScript>().invMass == 0)
+        else
         {
-            Debug.Log("Stop2");
-
-            gameObject1.GetComponent<RigidBodyScript>().velocity = Vector3.zero;
-            gameObject1.GetComponent<RigidBodyScript>().angularSpeed = Vector3.zero;
-            pair.gameObject1.GetComponent<RigidBodyScript>().AddForce(-1f * PhysicsManager.gravityMultiplied * pair.gameObject1.GetComponent<RigidBodyScript>().mass, collision.collisionPoint);
+            Vector3 frictionImpulse = ComputeFrictionImpulsion(pair, collision, k);
+            Debug.Log("Friction impulse : " + frictionImpulse);
+            rb1.AddForce(frictionImpulse / Time.deltaTime, collision.collisionPoint);
+            rb2.AddForce(-1f * frictionImpulse / Time.deltaTime, collision.collisionPoint);
         }
+        PositionalCorrection(pair.gameObject1, pair.gameObject2, collision);
     }
 
     private void PositionalCorrection(GameObject gameObject1, GameObject gameObject2, CollisionInfo collision)
@@ -101,7 +85,34 @@ public class CollisionManager
         float invMass1 = gameObject1.GetComponent<RigidBodyScript>().invMass;
         float invMass2 = gameObject2.GetComponent<RigidBodyScript>().invMass;
         Vector3 correction = Mathf.Max(collision.penetrationDepth - slop, 0f) / (invMass1 + invMass2) * percent * collision.normalVector;
-        gameObject1.transform.position -= invMass1 * correction;
+        gameObject1.transform.position += invMass1 * correction;
         gameObject2.transform.position -= invMass2 * correction;
+    }
+
+    private Vector3 ComputeFrictionImpulsion(SortAndSweep.GameObjectsPair pair, CollisionInfo collision, float j)
+    {
+        RigidBodyScript rb1 = pair.gameObject1.GetComponent<RigidBodyScript>();
+        RigidBodyScript rb2 = pair.gameObject2.GetComponent<RigidBodyScript>();
+
+        Vector3 rv = rb2.velocity - rb1.velocity;
+        Vector3 tangent = (rv - Vector3.Dot(rv, collision.normalVector) * collision.normalVector).normalized;
+        float jt = -1f * Vector3.Dot(rv, tangent);
+        jt = jt / (rb1.invMass + rb2.invMass);
+        float mu = new Vector2(rb1.staticFriction, rb2.staticFriction).magnitude;
+
+        Vector3 frictionImpulse;
+        if (Mathf.Abs(jt) < j * mu)
+        {
+            Debug.Log("Case1");
+            frictionImpulse = jt * tangent;
+        }
+        else
+        {
+            Debug.Log("Case2");
+
+            float dynamicFriction = new Vector2(rb1.dynamicFriction, rb2.dynamicFriction).magnitude;
+            frictionImpulse = -1f * tangent * dynamicFriction;
+        }
+        return frictionImpulse;
     }
 }

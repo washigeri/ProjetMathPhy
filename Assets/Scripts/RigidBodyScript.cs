@@ -15,8 +15,11 @@ public class RigidBodyScript : MonoBehaviour
     public float mass = 1f;
     public bool useGravity = true;
     public Shapes shape;
-    public float drag;
+    public float linearDrag = 0.47f;
+    public float angularDrag = 0.47f;
     public float restitution = 0.5f;
+    public float staticFriction = 0.5f;
+    public float dynamicFriction = 0.5f;
 
     [HideInInspector]
     public List<Force> forces;
@@ -24,19 +27,19 @@ public class RigidBodyScript : MonoBehaviour
     [HideInInspector]
     public Vector3 velocity;
 
-    [HideInInspector]
     public Vector3 angularSpeed;
 
+    [HideInInspector]
     public float invMass;
 
-    public float radius = 1;
-    public float square_size = 1;
+    private float radius = 1;
+    private float square_size = 1;
 
-    public float cuboid_size_x = 1;
-    public float cuboid_size_y = 1;
-    public float cuboid_size_z = 1;
+    private float cuboid_size_x = 1;
+    private float cuboid_size_y = 1;
+    private float cuboid_size_z = 1;
 
-    public float cylinder_height = 1;
+    private float cylinder_height = 1;
 
     [HideInInspector]
     public Matrix4x4 inertiaMatrix;
@@ -58,6 +61,28 @@ public class RigidBodyScript : MonoBehaviour
         velocity = new Vector3(0f, 0f, 0f);
         angularSpeed = new Vector3(0f, 0f, 0f);
 
+        Vector3 size;
+
+        if (transform.rotation.eulerAngles != Vector3.zero)
+        {
+            Vector3 previous = transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.identity;
+            size = GetComponent<Renderer>().bounds.size;
+            transform.rotation = Quaternion.Euler(previous);
+        }
+        else
+        {
+            size = GetComponent<Renderer>().bounds.size;
+        }
+        cuboid_size_x = size.x;
+        cuboid_size_y = size.y;
+        cuboid_size_z = size.z;
+
+        square_size = Mathf.Max(size.x, size.y, size.z);
+        radius = Mathf.Max(size.x, size.y, size.z) / 2;
+
+        cylinder_height = size.z;
+
         switch (shape)
         {
             case Shapes.Cube:
@@ -74,7 +99,7 @@ public class RigidBodyScript : MonoBehaviour
                 break;
 
             case Shapes.Sphere:
-                inertiaMatrix = Matrix4x4.Identity * (mass * 2 * Mathf.Pow(radius, 2) / 5f);
+                inertiaMatrix = Matrix4x4.Identity * (mass * 2f * Mathf.Pow(radius, 2) / 5f);
                 areaDrag = Mathf.Pow(radius, 2) * Mathf.PI;
                 break;
 
@@ -90,15 +115,15 @@ public class RigidBodyScript : MonoBehaviour
     // Update is called once per frame
     public void NewtonUpdate()
     {
-        airDrag = -1f * 0.5f * PhysicsManager.airDensity * drag * areaDrag * velocity.magnitude * velocity.magnitude * velocity.normalized;
+        airDrag = -1f * 0.5f * PhysicsManager.airDensity * linearDrag * areaDrag * velocity.sqrMagnitude * velocity.normalized;
         AddForce(airDrag);
         if (useGravity)
             AddForce(PhysicsManager.gravityMultiplied * mass);
 
         Vector3 acceleration = ComputeAcceleration();
+        Vector3 angularAcceleration = ComputeAngularAcceleration();
         velocity = velocity + (acceleration * Time.deltaTime);
         gameObject.transform.position = Matrix4x4.Translation(velocity * Time.deltaTime) * gameObject.transform.position;
-        Vector3 angularAcceleration = ComputeAngularAcceleration();
         angularSpeed = angularSpeed + (angularAcceleration * Time.deltaTime);
         gameObject.transform.Rotate(angularSpeed * Time.deltaTime);
 
@@ -119,6 +144,8 @@ public class RigidBodyScript : MonoBehaviour
     private Vector3 ComputeAngularAcceleration()
     {
         Vector3 res = new Vector3(0, 0, 0);
+        Vector3 angularDragM = -1f * 0.5f * angularDrag * PhysicsManager.airDensity * areaDrag * (angularSpeed * Mathf.Deg2Rad).sqrMagnitude * angularSpeed.normalized;
+        res += angularDragM;
         foreach (Force force in forces)
         {
             //Debug.Log("Force count : " + forces.Count);
