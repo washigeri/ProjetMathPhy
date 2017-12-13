@@ -17,6 +17,20 @@ public class BoxCollider3D : CustomCollider
         get
         {
             return GetComponent<Renderer>().bounds.size;
+            //Vector3 sizeAfterRotation = Vector3.one;
+            //float tmp = sizeAfterRotation.z;
+            //sizeAfterRotation.z = Mathf.Cos(transform.eulerAngles.x * Mathf.Deg2Rad) * sizeAfterRotation.z + Mathf.Sin(transform.eulerAngles.x * Mathf.Deg2Rad) * sizeAfterRotation.y;
+            //sizeAfterRotation.y = Mathf.Sin(transform.eulerAngles.x * Mathf.Deg2Rad) * tmp + Mathf.Cos(transform.eulerAngles.x * Mathf.Deg2Rad) * sizeAfterRotation.y;
+
+            //tmp = sizeAfterRotation.x;
+            //sizeAfterRotation.x = Mathf.Cos(transform.eulerAngles.y * Mathf.Deg2Rad) * sizeAfterRotation.x + Mathf.Sin(transform.eulerAngles.y * Mathf.Deg2Rad) * sizeAfterRotation.z;
+            //sizeAfterRotation.z = Mathf.Sin(transform.eulerAngles.y * Mathf.Deg2Rad) * tmp + Mathf.Cos(transform.eulerAngles.y * Mathf.Deg2Rad) * sizeAfterRotation.z;
+
+            //tmp = sizeAfterRotation.x;
+            //sizeAfterRotation.x = Mathf.Cos(transform.eulerAngles.y * Mathf.Deg2Rad) * sizeAfterRotation.x + Mathf.Sin(transform.eulerAngles.y * Mathf.Deg2Rad) * sizeAfterRotation.y;
+            //sizeAfterRotation.y = Mathf.Sin(transform.eulerAngles.y * Mathf.Deg2Rad) * tmp + Mathf.Cos(transform.eulerAngles.y * Mathf.Deg2Rad) * sizeAfterRotation.y;
+
+            //return sizeAfterRotation;
         }
     }
 
