@@ -41,11 +41,11 @@ public class BoxCollider3D : CustomCollider
         Vector3 max = center + size / 2f;
         Vector3 min = center - size / 2f;
         Vector3 result = new Vector3();
-        if(point.x > max.x)
+        if (point.x > max.x)
         {
             result.x = max.x;
         }
-        else if(point.x < min.x)
+        else if (point.x < min.x)
         {
             result.x = min.x;
         }
@@ -53,11 +53,11 @@ public class BoxCollider3D : CustomCollider
         {
             result.x = point.x;
         }
-        if(point.y > max.y)
+        if (point.y > max.y)
         {
             result.y = max.y;
         }
-        else if(point.y < min.y)
+        else if (point.y < min.y)
         {
             result.y = min.y;
         }
@@ -65,11 +65,11 @@ public class BoxCollider3D : CustomCollider
         {
             result.y = point.y;
         }
-        if(point.z > max.z)
+        if (point.z > max.z)
         {
             result.z = max.z;
         }
-        else if(point.z < min.z)
+        else if (point.z < min.z)
         {
             result.z = min.z;
         }
@@ -134,7 +134,7 @@ public class BoxCollider3D : CustomCollider
             if (isColliding)
             {
                 Debug.Log("colliding !");
-                return new CollisionInfo(closestPoint, (colliderSphere.Center - closestPoint).normalized, -colliderSphere.Radius + Vector3.Distance(closestPoint, colliderSphere.Center));
+                return new CollisionInfo(closestPoint, (colliderSphere.Center - closestPoint).normalized, colliderSphere.Radius - Vector3.Distance(closestPoint, colliderSphere.Center));
             }
         }
         else if (collider is BoxCollider3D)
@@ -157,7 +157,6 @@ public class BoxCollider3D : CustomCollider
         }
         return null;
     }
-
 
     private void OnDrawGizmosSelected()
     {

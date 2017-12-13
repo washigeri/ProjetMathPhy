@@ -41,6 +41,7 @@ public class CollisionManager
                 var collision = pair.AreColliding();
                 if (collision != null)
                 {
+                    Debug.Log("Cpollision");
                     ResolveCollisionWithImpulse(pair, collision);
                 }
             }
@@ -64,15 +65,15 @@ public class CollisionManager
         Vector3 w1 = rb1.angularSpeed;
         Vector3 w2 = rb2.angularSpeed;
 
-        Vector3 u1 = Vector3.Cross(w1, collision.collisionPoint - gameObject1.transform.position);
-        Vector3 u2 = Vector3.Cross(w2, collision.collisionPoint - gameObject2.transform.position);
+        Vector3 u1 = Vector3.Cross(w1 * Mathf.Deg2Rad, collision.collisionPoint - gameObject1.transform.position);
+        Vector3 u2 = Vector3.Cross(w2 * Mathf.Deg2Rad, collision.collisionPoint - gameObject2.transform.position);
 
         rb1.velocity -= k * collision.normalVector * rb1.invMass;
         rb2.velocity += k * collision.normalVector * rb2.invMass;
         if (!USE_COMPUTED_FRICTION)
         {
-            rb1.AddForce(rb1.staticFriction * u1);
-            rb2.AddForce(rb2.staticFriction * u2);
+            rb1.AddForce(-1f * rb1.staticFriction * u1);
+            rb2.AddForce(-1f * rb2.staticFriction * u2);
         }
         else
         {
@@ -89,7 +90,7 @@ public class CollisionManager
         const float slop = 0.01f;
         float invMass1 = gameObject1.GetComponent<RigidBodyScript>().invMass;
         float invMass2 = gameObject2.GetComponent<RigidBodyScript>().invMass;
-        Vector3 correction = Mathf.Max(collision.penetrationDepth - slop, 0f) / (invMass1 + invMass2) * percent * collision.normalVector;
+        Vector3 correction = Mathf.Max(Mathf.Abs(collision.penetrationDepth) - slop, 0f) / (invMass1 + invMass2) * percent * collision.normalVector;
         gameObject1.transform.position -= invMass1 * correction;
         gameObject2.transform.position += invMass2 * correction;
     }
