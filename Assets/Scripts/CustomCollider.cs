@@ -23,8 +23,6 @@ public abstract class CustomCollider : MonoBehaviour
 
     private Vector3 oldRotation;
 
-    protected bool Enabled { get; set; }
-
     protected RigidBodyScript rb;
 
     internal abstract float GetMinXYZ(int axe);
