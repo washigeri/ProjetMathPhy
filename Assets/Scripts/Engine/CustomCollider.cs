@@ -19,10 +19,6 @@ public class CollisionInfo
 
 public abstract class CustomCollider : MonoBehaviour
 {
-    private Vector3 oldPosition;
-
-    private Vector3 oldRotation;
-
     protected RigidBodyScript rb;
 
     internal abstract float GetMinXYZ(int axe);
