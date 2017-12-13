@@ -1,8 +1,8 @@
 # Projet Mathématiques & Physiques UQAC
 ---
-* Malek EL OUERGHI
+* Malek El Ouerghi
 * Pierre Barjon
 ---
 ### Instructions:
 * Lancer le projet avec Unity
-* Faire une build du projet (sinon problème avec la lumière dans l'édidteur de Unity)
+* Faire une build du projet (sinon problème avec la lumière dans l'éditeur de Unity)
