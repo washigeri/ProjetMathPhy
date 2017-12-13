@@ -309,11 +309,11 @@ public class Matrix4x4
 
     public static Matrix4x4 RotationXYZ(float thetaX, float thetaY, float thetaZ, Vector3 translation)
     {
-        Matrix4x4 ZYX = RotationXYZ(thetaX, thetaY, thetaZ);
-        ZYX[0, 3] = translation.x;
-        ZYX[1, 3] = translation.y;
-        ZYX[2, 3] = translation.z;
-        return ZYX;
+        Matrix4x4 YXZ = RotationXYZ(thetaX, thetaY, thetaZ);
+        YXZ[0, 3] = translation.x;
+        YXZ[1, 3] = translation.y;
+        YXZ[2, 3] = translation.z;
+        return YXZ;
     }
 
     public static Matrix4x4 Translation(Vector3 translation)
