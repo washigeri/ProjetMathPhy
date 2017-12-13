@@ -5,6 +5,15 @@ public class ForceManager
 {
     private List<GameObject> rigidBodies;
 
+    public void AddRB(RigidBodyScript[] rigidBody)
+    {
+        foreach (RigidBodyScript rb in rigidBody)
+        {
+            if (!rigidBodies.Contains(rb.gameObject))
+                rigidBodies.Add(rb.gameObject);
+        }
+    }
+
     public ForceManager(RigidBodyScript[] rigidBodyP)
     {
         rigidBodies = new List<GameObject>();

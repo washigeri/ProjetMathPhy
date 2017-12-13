@@ -8,6 +8,15 @@ public class CollisionManager
 
     private List<GameObject> colliders;
 
+    public void AddNewCollider(CustomCollider[] collider)
+    {
+        foreach (CustomCollider coll in collider)
+        {
+            if (!colliders.Contains(coll.gameObject))
+                colliders.Add(coll.gameObject);
+        }
+    }
+
     public CollisionManager(CustomCollider[] colliderRes)
     {
         colliders = new List<GameObject>();
@@ -54,9 +63,6 @@ public class CollisionManager
 
         Vector3 w1 = rb1.angularSpeed;
         Vector3 w2 = rb2.angularSpeed;
-
-        Vector3 r1 = collision.collisionPoint - gameObject1.transform.position;
-        Vector3 r2 = collision.collisionPoint - gameObject2.transform.position;
 
         Vector3 u1 = Vector3.Cross(w1, collision.collisionPoint - gameObject1.transform.position);
         Vector3 u2 = Vector3.Cross(w2, collision.collisionPoint - gameObject2.transform.position);
